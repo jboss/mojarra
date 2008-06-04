@@ -48,11 +48,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.lang.annotation.Annotation;
 
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
+import javax.faces.application.AnnotationHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -90,7 +93,8 @@ import javax.faces.render.Renderer;
 
  */
 
-public abstract class UIComponent implements StateHolder, SystemEventListenerHolder {
+public abstract class UIComponent
+      implements StateHolder, SystemEventListenerHolder, AnnotationHolder {
 
     /**
      * This array represents the packages that can leverage the
@@ -1063,7 +1067,8 @@ private void doFind(FacesContext context, String clientId) {
      */
     protected void popComponentFromEL(FacesContext context) {
 
-        Map<String,Object> requestMap = context.getExternalContext().getRequestMap();
+        Map<String, Object> requestMap =
+              context.getExternalContext().getRequestMap();
         if (requestMap != null) {
             if (previouslyPushed != null) {
                 requestMap.put("component", previouslyPushed);
@@ -1260,6 +1265,23 @@ private void doFind(FacesContext context, String clientId) {
     }
 
 
+    // ------------------------------------------- Methods from AnnotationHolder
+
+    private Annotation[] annotations;
+
+    public void setAnnotations(Annotation[] annotations) {
+
+        if (annotations == null) {
+            throw new NullPointerException("annotations");
+        }
+        this.annotations = annotations;
+
+    }
+
+    public Annotation[] getAnnotations() {
+        return annotations;
+    }
+    
 
     // ------------------------------------------------ Lifecycle Phase Handlers
 

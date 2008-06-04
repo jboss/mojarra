@@ -58,6 +58,7 @@ import javax.faces.convert.Converter;
 import javax.faces.event.AbortProcessingException;
 import java.beans.FeatureDescriptor;
 import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -486,16 +487,28 @@ public class Util {
         return keepGoing;
     }
     
-    public static void processListenerForAnnotation(UIComponent source) {
-        if (source.getClass().isAnnotationPresent(ListenerFor.class) &&
-            source instanceof SystemEventListener) {
-            ListenerFor listenerFor = (ListenerFor) 
-                    source.getClass().getAnnotation(ListenerFor.class);
-            assert(null != listenerFor);
-            Class<? extends SystemEvent> eventClass = listenerFor.systemEventClass();
-            Class sourceClass = listenerFor.sourceClass();
-            source.subscribeToEvent(eventClass, (ComponentSystemEventListener) source);
+    public static void processListenerForAnnotation(UIComponent source) {       
+        Annotation[] annotations = source.getAnnotations();
+        if (annotations != null
+            && annotations.length != 0
+            && source instanceof ComponentSystemEventListener) {
+            for (Annotation annotation : annotations) {
+                if (annotation instanceof ListenerFor) {
+                    Class<? extends SystemEvent> eventClass =
+                          ((ListenerFor) annotation).systemEventClass();
+                    source.subscribeToEvent(eventClass, (ComponentSystemEventListener) source);
+                }
+            }
         }
+//        if (source.getClass().isAnnotationPresent(ListenerFor.class) &&
+//            source instanceof SystemEventListener) {
+//            ListenerFor listenerFor = (ListenerFor)
+//                    source.getClass().getAnnotation(ListenerFor.class);
+//            assert(null != listenerFor);
+//            Class<? extends SystemEvent> eventClass = listenerFor.systemEventClass();
+//            Class sourceClass = listenerFor.sourceClass();
+//            source.subscribeToEvent(eventClass, (ComponentSystemEventListener) source);
+//        }
         
     }
 

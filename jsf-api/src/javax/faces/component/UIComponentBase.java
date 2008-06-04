@@ -76,6 +76,7 @@ import javax.faces.FactoryFinder;
 import javax.faces.application.ResourceDependencies;
 import javax.faces.application.ResourceDependency;
 import javax.faces.application.ResourceHandler;
+import javax.faces.application.AnnotationHolder;
 import javax.faces.event.AfterAddToParentEvent;
 import javax.faces.event.BeforeRenderEvent;
 import javax.faces.event.PhaseId;
@@ -2110,35 +2111,44 @@ public abstract class UIComponentBase extends UIComponent {
             }
         }
         
-        private void processResourceDependencyAnnotation(FacesContext context, 
-                                                         Object source) {
-            Class<?> sourceClass = source.getClass();
-            UIOutput resourceComponent = null;
-            // check for both as it would be legal to have a single
-            // @ResourceDependencies and @ResourceDependency annotation
-            // defined
-            // NOTE - calling isAnnotationPresent and getAnnotation without
-            // caching the metadata will be a performance sink as these methods
-            // are backed by a sync'd utility method.  We'll need to come up
-            // with something better.
-            if (sourceClass.isAnnotationPresent(ResourceDependencies.class)) {
-                ResourceDependencies resourceDeps =
-                      source.getClass()
-                            .getAnnotation(ResourceDependencies.class);
-                ResourceDependency[] dependencies = resourceDeps.value();
-                if (dependencies != null) {
-                    for (ResourceDependency dependency : dependencies) {
-                        createComponentResource(context, dependency);
+        private void processResourceDependencyAnnotation(FacesContext context,
+                                                         AnnotationHolder holder) {
+//            Class<?> sourceClass = source.getClass();
+//            UIOutput resourceComponent = null;
+//            // check for both as it would be legal to have a single
+//            // @ResourceDependencies and @ResourceDependency annotation
+//            // defined
+//            // NOTE - calling isAnnotationPresent and getAnnotation without
+//            // caching the metadata will be a performance sink as these methods
+//            // are backed by a sync'd utility method.  We'll need to come up
+//            // with something better.
+//            if (sourceClass.isAnnotationPresent(ResourceDependencies.class)) {
+//                ResourceDependencies resourceDeps =
+//                      source.getClass()
+//                            .getAnnotation(ResourceDependencies.class);
+//                ResourceDependency[] dependencies = resourceDeps.value();
+//                if (dependencies != null) {
+//                    for (ResourceDependency dependency : dependencies) {
+//                        createComponentResource(context, dependency);
+//                    }
+//                }
+//            }
+//            if (sourceClass.isAnnotationPresent(ResourceDependencies.class)) {
+//                ResourceDependency resource =
+//                      sourceClass.getAnnotation(ResourceDependency.class);
+//                createComponentResource(context, resource);
+//            }
+
+            Annotation[] annotations = holder.getAnnotations();
+            if (annotations != null && annotations.length != 0) {
+                for (Annotation annotation : annotations) {
+                    if (annotation instanceof ResourceDependency) {
+                        createComponentResource(context, (ResourceDependency) annotation);
                     }
                 }
             }
-            if (sourceClass.isAnnotationPresent(ResourceDependencies.class)) {
-                ResourceDependency resource =
-                      sourceClass.getAnnotation(ResourceDependency.class);
-                createComponentResource(context, resource);
-            }
 
-        }
+        }                
 
         private static void createComponentResource(FacesContext context, ResourceDependency resourceDep) {
 
