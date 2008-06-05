@@ -1158,7 +1158,9 @@ public class ApplicationImpl extends Application {
             clazz = (Class) value;
         }
 
-        annotationsMap.put(clazz, clazz.getAnnotations());
+        if (!annotationsMap.containsKey(clazz)) {
+            annotationsMap.put(clazz, clazz.getAnnotations());
+        }
         try {
             result = clazz.newInstance();
         } catch (Throwable t) {
