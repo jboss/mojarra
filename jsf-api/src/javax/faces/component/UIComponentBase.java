@@ -2141,9 +2141,25 @@ public abstract class UIComponentBase extends UIComponent {
 
             Annotation[] annotations = holder.getAnnotations();
             if (annotations != null && annotations.length != 0) {
+                boolean resDepsFound = false;
+                boolean resDepFound = false;
                 for (Annotation annotation : annotations) {
                     if (annotation instanceof ResourceDependency) {
                         createComponentResource(context, (ResourceDependency) annotation);
+                        resDepFound = true;
+                    }
+                    if (annotation instanceof ResourceDependencies) {
+                        ResourceDependency[] dependencies =
+                              ((ResourceDependencies) annotation).value();
+                        if (dependencies != null) {
+                            for (ResourceDependency dependency : dependencies) {
+                                createComponentResource(context, dependency);
+                            }
+                        }
+                        resDepsFound = true;
+                    }
+                    if (resDepsFound && resDepFound) {
+                        break;
                     }
                 }
             }
