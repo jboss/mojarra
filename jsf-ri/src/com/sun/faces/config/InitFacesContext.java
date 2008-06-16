@@ -142,7 +142,7 @@ class InitFacesContext extends FacesContext {
     public void addMessage(String clientId, FacesMessage message) { }
 
     public void release() {
-        setCurrentInstance(orig);
+        setCurrentInstance(orig);      
     }
 
     public void renderResponse() { }

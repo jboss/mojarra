@@ -67,7 +67,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.sun.faces.el.ELContextImpl;
-import com.sun.faces.util.MessageUtils;
 import com.sun.faces.util.FacesLogger;
 import com.sun.faces.util.RequestStateManager;
 import com.sun.faces.util.Util;
@@ -91,6 +90,7 @@ import com.sun.faces.util.Util;
      private Severity maxSeverity;
      private boolean renderResponse = false;
      private boolean responseComplete = false;
+     private boolean getAttributesCalled = false;
 
      /**
       * Store mapping of clientId to ArrayList of FacesMessage
@@ -140,6 +140,17 @@ import com.sun.faces.util.Util;
          assert (null != application);
          return application;
      }
+
+    @Override
+    public Map<Object, Object> getAttributes() {
+        
+        assertNotReleased();
+        getAttributesCalled = true;
+        return super.getAttributes();
+        
+    }
+     
+     
 
 
      /**
@@ -309,9 +320,11 @@ import com.sun.faces.util.Util;
          assertNotReleased();
          Util.notNull("root", root);
 
-         if (null != viewRoot && 
-             !viewRoot.equals(root)) {
-             viewRoot.getViewMap().clear();
+         if (viewRoot != null && !viewRoot.equals(root)) {
+             Map<String,Object> viewMap = viewRoot.getViewMap(false);
+             if (viewMap != null) {
+                viewRoot.getViewMap().clear();
+             }
          }
 
          viewRoot = root;
@@ -390,7 +403,10 @@ import com.sun.faces.util.Util;
          renderResponse = false;
          responseComplete = false;
          viewRoot = null;
-
+         if (getAttributesCalled) {
+             super.getAttributes().clear();
+         }
+         
          // PENDING(edburns): write testcase that verifies that release
          // actually works.  This will be important to keep working as
          // ivars are added and removed on this class over time.

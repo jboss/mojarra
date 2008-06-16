@@ -78,9 +78,10 @@ public class ScriptRenderer extends Renderer implements ComponentSystemEventList
     public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
         UIComponent component = event.getComponent();
         FacesContext context = FacesContext.getCurrentInstance();
-        
-        if (component.getAttributes().containsKey("target")) {
-            context.getViewRoot().addComponentResource(context, component);
+
+        String target = (String) component.getAttributes().get("target");
+        if (target != null) {
+            context.getViewRoot().addComponentResource(context, component, target);
         }
     }
     
@@ -106,7 +107,7 @@ public class ScriptRenderer extends Renderer implements ComponentSystemEventList
           throws IOException {
 
         Map<String,Object> attributes = component.getAttributes();
-        Map<String, Object> requestMap = context.getExternalContext().getRequestMap();
+        Map<Object, Object> contextMap = context.getAttributes();
 
         String name = (String) attributes.get("name");
         String library = (String) attributes.get("library");
@@ -114,10 +115,10 @@ public class ScriptRenderer extends Renderer implements ComponentSystemEventList
         String key = name + library;
         
         // Ensure this script is not rendered more than once per request
-        if (requestMap.containsKey(key)) {
+        if (contextMap.containsKey(key)) {
             return;
         }
-        requestMap.put(key, Boolean.TRUE);
+        contextMap.put(key, Boolean.TRUE);
         
         Resource resource = context.getApplication().getResourceHandler()
               .createResource(name, library);

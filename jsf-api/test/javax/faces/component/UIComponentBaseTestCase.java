@@ -44,6 +44,8 @@ import java.lang.reflect.InvocationTargetException;
 import javax.faces.FactoryFinder;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.application.FacesMessage;
+import javax.faces.application.ResourceDependency;
+import javax.faces.application.ResourceDependencies;
 import javax.faces.el.ValueBinding;
 import javax.el.ValueExpression;
 import com.sun.faces.mock.MockApplication;
@@ -59,6 +61,8 @@ import com.sun.faces.mock.MockServletContext;
 import com.sun.faces.mock.MockValueBinding;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+
 import javax.faces.FacesException;
 import javax.faces.component.UIComponentTestCase;
 import javax.faces.context.FacesContext;
@@ -66,6 +70,11 @@ import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.validator.ValidatorException;
 import javax.faces.event.AbortProcessingException;
+import javax.faces.event.SystemEventListener;
+import javax.faces.event.SystemEvent;
+import javax.faces.event.AfterAddToParentEvent;
+import javax.faces.event.BeforeRenderEvent;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -145,6 +154,73 @@ public class UIComponentBaseTestCase extends UIComponentTestCase {
         checkLifecycleSelfRendered();
         checkLifecycleSelfUnrendered();
 
+
+    }
+
+
+    public void testAddChildWithComponentResource() {
+
+        application.addComponent("javax.faces.Output", "javax.faces.component.UIOutput");
+        application.addComponent("javax.faces.Panel", "javax.faces.component.UIPanel");
+        facesContext.getAttributes().put("javax.faces.IS_POSTBACK_AND_RESTORE_VIEW", Boolean.FALSE);
+        UIViewRoot root = new UIViewRoot();
+        UIComponent parent = createComponent();
+        root.setRenderKitId(RenderKitFactory.HTML_BASIC_RENDER_KIT);
+        facesContext.setViewRoot(root);        
+        ResourceComponent child = new ResourceComponent();
+        root.getChildren().add(parent);
+        parent.getChildren().add(child);
+        List<UIComponent> headComponents = root.getComponentResources(facesContext, "head");
+        System.out.println(headComponents.toString());
+        assertTrue(headComponents.size() == 1);
+        assertTrue(headComponents.get(0) instanceof UIOutput);
+        List<UIComponent> bodyComponents = root.getComponentResources(facesContext, "body");
+        assertTrue(bodyComponents.size() == 1);
+        assertTrue(bodyComponents.get(0) instanceof UIOutput);
+        
+    }
+
+
+    public void testAddFacetWithComponentResource() {
+
+        application.addComponent("javax.faces.Output", "javax.faces.component.UIOutput");
+        application.addComponent("javax.faces.Panel", "javax.faces.component.UIPanel");
+        facesContext.getAttributes().put("javax.faces.IS_POSTBACK_AND_RESTORE_VIEW", Boolean.FALSE);
+        UIViewRoot root = new UIViewRoot();
+        UIComponent parent = createComponent();
+        root.setRenderKitId(RenderKitFactory.HTML_BASIC_RENDER_KIT);
+        facesContext.setViewRoot(root);
+        ResourceComponent child = new ResourceComponent();
+        root.getChildren().add(parent);
+        parent.getFacets().put("facet", child);
+        List<UIComponent> headComponents = root.getComponentResources(facesContext, "head");
+        System.out.println(headComponents.toString());
+        assertTrue(headComponents.size() == 1);
+        assertTrue(headComponents.get(0) instanceof UIOutput);
+        List<UIComponent> bodyComponents = root.getComponentResources(facesContext, "body");
+        assertTrue(bodyComponents.size() == 1);
+        assertTrue(bodyComponents.get(0) instanceof UIOutput);
+
+    }
+
+
+    public void testComponentToFromEL() {
+
+        TestComponent c = new TestComponent();
+        facesContext.getAttributes().clear();
+        assertNull(facesContext.getAttributes().get("component"));
+        c.pushComponentToEL(facesContext);
+        assertTrue(facesContext.getAttributes().get("component") == c);
+        c.popComponentFromEL(facesContext);
+        assertNull(facesContext.getAttributes().get("component"));
+
+        // ensure a push/pop seqeunce restores the previous component
+        TestComponent c1 = new TestComponent();
+        facesContext.getAttributes().put("component", c1);
+        c.pushComponentToEL(facesContext);
+        assertTrue(facesContext.getAttributes().get("component") == c);
+        c.popComponentFromEL(facesContext);
+        assertTrue(facesContext.getAttributes().get("component") == c1);
 
     }
 
@@ -1321,7 +1397,88 @@ public class UIComponentBaseTestCase extends UIComponentTestCase {
     
     }
 
+
+    public void testChildrenListAfterAddPublish() {
+
+        Listener listener = new Listener();
+        application.subscribeToEvent(AfterAddToParentEvent.class, listener);
+
+        UIComponent c1 = createComponent();
+        UIComponent c2 = createComponent();
+        UIComponent c3 = createComponent();
+
+        c1.getChildren().add(c2);
+        SystemEvent e = listener.getEvent();
+        assertNotNull(e);
+        assertTrue(e.getSource() == c2);
+        assertTrue(((UIComponent) e.getSource()).getParent() == c1);
+        listener.reset();
+        c2.getChildren().add(c3);
+        e = listener.getEvent();
+        assertNotNull(e);
+        assertTrue(e.getSource() == c3);
+        assertTrue(((UIComponent) e.getSource()).getParent() == c2);
+
+        application.unsubscribeFromEvent(AfterAddToParentEvent.class, listener);
+
+    }
+
+
+    public void testEncodeBeginPublish() throws Exception {
+
+        Listener listener = new Listener();
+        application.subscribeToEvent(BeforeRenderEvent.class, listener);
+
+        UIComponent c1 = createComponent();
+        c1.encodeBegin(facesContext);
+        SystemEvent e = listener.getEvent();
+        assertNotNull(e);
+        assertTrue(e.getSource() == c1);
+        listener.reset();
+        c1.encodeChildren(facesContext);
+        assertNull(listener.getEvent());
+        c1.encodeEnd(facesContext);
+        assertNull(listener.getEvent());
+
+        application.unsubscribeFromEvent(BeforeRenderEvent.class, listener);
+        
+    }
+
+
+    // --------------------------------------------------------- Private Classes
+
+
+    private static final class Listener implements SystemEventListener {
+
+        private SystemEvent event;
+
+        public void processEvent(SystemEvent event)
+        throws AbortProcessingException {
+            this.event = event;
+        }
+
+        public boolean isListenerForSource(Object source) {
+            return (source instanceof UIComponent);
+        }
+
+        public SystemEvent getEvent() {
+            return event;
+        }
+
+        public void reset() {
+            event = null;
+        }
+    }
+
     
-    
+    @ResourceDependencies ({
+        @ResourceDependency(name="test.js",library="test",target="body"),
+        @ResourceDependency(name="test.css",library="test")
+    })
+    private static final class ResourceComponent extends UIComponentBase {
+        public String getFamily() {
+            return "ResourceComponent";
+        }
+    }
 
 }

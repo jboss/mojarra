@@ -34,24 +34,25 @@
  holder.
 --%>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <title>Test Resource Injection in Managed Beans</title>
-    <%@ taglib uri="http://java.sun.com/jsf/core"  prefix="f" %>
-    <%@ taglib uri="http://java.sun.com/jsf/html"  prefix="h" %>
-  </head>
-
-  <body>
-    <h1>Test Resource Injection in Managed Beans</h1>
-
+<%@ page contentType="text/html" %>
+<%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
+<%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
+<%
+    java.util.List<String> l = new java.util.ArrayList<String>(2);
+    l.add("one");
+    l.add("two");
+    request.setAttribute("list", l);
+%>
 <f:view>
-   
-    <h:outputText value="#{resourceInjectionBean.welcomeMessage}" />
-    <h:outputText value="#{resourceInjectionBean2.welcomeMessage}" />    
-   
+    <h:form prependId="false">
+        <h:outputText id="ot" value="#{component.id}"/>
+        <h:dataTable value="#{requestScope.list}" var="v">
+            <h:column>
+                <f:facet name="header" >
+                    <h:outputText id="facetOT" value="#{component.id}"/>
+                </f:facet>
+                <h:inputText id="it" value="#{component.id}"/>
+            </h:column>
+        </h:dataTable>        
+    </h:form>
 </f:view>
-
-    <hr>
-  </body>
-</html>

@@ -36,17 +36,14 @@
 
 package com.sun.faces.util;
 
-import java.util.Map;
-import java.util.HashMap;
-
 import javax.faces.context.FacesContext;
 
 import com.sun.faces.RIConstants;
 
 /**
  * <p>
- * This helper class is used to reduced the number of per-request state
- * variables we store in the request.
+ * This helper class is for managing per-request state within the
+ * the implementation.
  * </p>
  *
  * <p>
@@ -60,13 +57,11 @@ import com.sun.faces.RIConstants;
  *
  * <p>
  * To that end, this class should be used to for all interactions with implementation
- * specific request scoped attributes.  By using this class, all attributes
- * needed by the implementation will be stored within a Map within the the request,
- * so that we only trigger one ServletRequestAttributeListener event per request (
- * that one event will be the first time we add the Map to the request).
+ * specific per-request attributes.  There may be cases where an attribute must
+ * be in the request instead of the FacesContext attributes map.  For those
+ * cases call the appropriate method containing the boolean parameter,
+ * <code>useFacesContext</code> with a value of <code>false</code>.
  * </p>
- *
- * @since 1.2_08
  */
 public class RequestStateManager {
 
@@ -182,32 +177,58 @@ public class RequestStateManager {
     public static final String RESOURCE_REQUEST =
           "com.sun.faces.RESOURCE_REQUEST";
 
-    /**
-     * <p>The key under with the Map containing the implementation specific
-     * attributes will be stored within the request.<p>
-     */
-    private static final String KEY =
-          RequestStateManager.class.getName();
-
 
     // ---------------------------------------------------------- Public Methods
 
 
     /**
-     * @param ctx the <code>FacesContext</code> for the current request
-     * @param key the key for the value
-     * @return the value associated with the specified key.
+     * Calls through to {@link #get(javax.faces.context.FacesContext, String, boolean)}
+     * passing <code>true</code> for the <code>useFacesContext</code> param.
+     *
+     * @see #get(javax.faces.context.FacesContext, String, boolean)
      */
     public static Object get(FacesContext ctx, String key) {
+
+        return get(ctx, key, true);
+
+    }
+
+
+    /**
+     * @param ctx the <code>FacesContext</code> for the current request
+     * @param key the key for the value
+     * @param useFacesContext if <code>true</code> then the value will
+     *  be retrienved from the FacesContext attributes map, otherwise it will be
+     *  retrieved from the ExternalContext request map.
+     * @return the value associated with the specified key.
+     */
+    public static Object get(FacesContext ctx,
+                             String key,
+                             boolean useFacesContext) {
 
         if (ctx == null || key == null) {
             return null;
         }
-        Map<String,Object> reqState = getStateMap(ctx);
-        return reqState.get(key);
+
+        return ((useFacesContext)
+                ? ctx.getAttributes().get(key)
+                : ctx.getExternalContext().getRequestMap().get(key));
 
     }
 
+
+    /**
+     * Calls through to {@link #set(javax.faces.context.FacesContext, String, Object, boolean)}
+     * passing <code>true</code> for the <code>useFacesContext</code> param.
+     *
+     * @see #set(javax.faces.context.FacesContext, String, Object, boolean)
+     */
+    public static void set(FacesContext ctx, String key, Object value) {
+
+        set(ctx, key, value, true);
+
+    }
+    
 
     /**
      * <p>
@@ -219,17 +240,40 @@ public class RequestStateManager {
      * @param ctx the <code>FacesContext</code> for the current request
      * @param key the key for the value
      * @param value the value to store
+     * @param useFacesContext if <code>true</code> then the key/value pair will
+     *  be stored in the FacesContext attrigbutes map, otherwise it they will be
+     *  stored in the ExternalContext request map
      */
-    public static void set(FacesContext ctx, String key, Object value) {
+    public static void set(FacesContext ctx,
+                           String key,
+                           Object value,
+                           boolean useFacesContext) {
 
         if (ctx == null || key == null) {
             return;
         }
         if (value == null) {
-            remove(ctx, key);
+            remove(ctx, key, useFacesContext);
         }
-        Map<String,Object> reqState = getStateMap(ctx);
-        reqState.put(key, value);
+
+        if (useFacesContext) {
+            ctx.getAttributes().put(key, value);
+        } else {
+            ctx.getExternalContext().getRequestMap().put(key, value);
+        }
+
+    }
+
+
+    /**
+     * Calls through to {@link #remove(javax.faces.context.FacesContext, String, boolean)}
+     * passing <code>true</code> for the <code>useFacesContext</code> param.
+     *
+     * @see #remove(javax.faces.context.FacesContext, String, boolean)
+     */
+    public static Object remove(FacesContext ctx, String key) {
+
+        return remove(ctx, key, true);
 
     }
 
@@ -241,15 +285,35 @@ public class RequestStateManager {
      *
      * @param ctx the <code>FacesContext</code> for the current request
      * @param key the key for the value
+     * @param useFacesContext if <code>true</code> then the key/value pair will
+     *  be removed from the FacesContext attrigbutes map, otherwise it they will
+     *  be removed from the ExternalContext request map
      * @return the value previous associated with the specified key, if any
      */
-    public static Object remove(FacesContext ctx, String key) {
+    public static Object remove(FacesContext ctx,
+                                String key,
+                                boolean useFacesContext) {
 
         if (ctx == null || key == null) {
             return null;
         }
-        Map<String,Object> reqState = getStateMap(ctx);
-        return reqState.remove(key);
+
+        return ((useFacesContext)
+                ? ctx.getAttributes().remove(key)
+                : ctx.getExternalContext().getRequestMap().remove(key));
+
+    }
+
+
+    /**
+     * Calls through to {@link #containsKey(javax.faces.context.FacesContext, String, boolean)}
+     * passing <code>true</code> for the <code>useFacesContext</code> param.
+     *
+     * @see #containsKey(javax.faces.context.FacesContext, String, boolean)
+     */
+    public static boolean containsKey(FacesContext ctx, String key) {
+
+        return containsKey(ctx, key, true);
 
     }
 
@@ -257,38 +321,18 @@ public class RequestStateManager {
     /**
      * @param ctx the <code>FacesContext</code> for the current request
      * @param key the key for the value
+     * @param useFacesContext if <code>true</code> then the key will be checked
+     *  in the FacesContext attrigbutes map, otherwise it it will be checked in
+     *  the ExternalContext request map
      * @return true if the specified key exists in the Map
      */
-    public static boolean containsKey(FacesContext ctx, String key) {
+    public static boolean containsKey(FacesContext ctx, String key, boolean useFacesContext) {
 
-        if (ctx == null || key == null) {
-            return false;
-        }
-        Map<String,Object> reqState = getStateMap(ctx);
-        return reqState.containsKey(key);
-
-    }
-
-
-    // --------------------------------------------------------- Private Methods
-
-
-    /**
-     * @param ctx the <code>FacesContext</code> for the current request
-     * @return the Map from the request containing the implementation specific
-     *  attributes needed for processing
-     */
-    private static Map<String,Object> getStateMap(FacesContext ctx) {
-
-        assert (ctx != null); // all callers guard against a null context
-        Map<String,Object> requestMap = ctx.getExternalContext().getRequestMap();
-        //noinspection unchecked
-        Map<String,Object> reqState = (Map<String,Object>) requestMap.get(KEY);
-        if (reqState == null) {
-            reqState = new HashMap<String,Object>();
-            requestMap.put(KEY, reqState);
-        }
-        return reqState;
+        return !(ctx == null || key == null) && ((useFacesContext)
+                                                 ? ctx.getAttributes().containsKey(key)
+                                                 : ctx.getExternalContext()
+                                                       .getRequestMap()
+                                                       .containsKey(key));
 
     }
 

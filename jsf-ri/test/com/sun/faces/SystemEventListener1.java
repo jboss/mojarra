@@ -1,12 +1,8 @@
 /*
- * $Id: ELConstants.java,v 1.8.8.1 2008/03/14 02:41:02 edburns Exp $
- */
-
-/*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
+ *
  * Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
- * 
+ *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
  * and Distribution License("CDDL") (collectively, the "License").  You
@@ -14,7 +10,7 @@
  * a copy of the License at https://glassfish.dev.java.net/public/CDDL+GPL.html
  * or glassfish/bootstrap/legal/LICENSE.txt.  See the License for the specific
  * language governing permissions and limitations under the License.
- * 
+ *
  * When distributing the software, include this License Header Notice in each
  * file and include the License file at glassfish/bootstrap/legal/LICENSE.txt.
  * Sun designates this particular file as subject to the "Classpath" exception
@@ -23,9 +19,9 @@
  * Header, with the fields enclosed by brackets [] replaced by your own
  * identifying information: "Portions Copyrighted [year]
  * [name of copyright owner]"
- * 
+ *
  * Contributor(s):
- * 
+ *
  * If you wish your version of this file to be governed by only the CDDL or
  * only the GPL Version 2, indicate your decision by adding "[Contributor]
  * elects to include this software in this distribution under the [CDDL or GPL
@@ -37,44 +33,23 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package com.sun.faces.el;
 
-/**
- * @author jhook
- */
-public interface ELConstants {
-    public static final int APPLICATION = 0;
+package com.sun.faces;
 
-    public static final int APPLICATION_SCOPE = 1;
+import javax.faces.event.SystemEventListener;
+import javax.faces.event.SystemEvent;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.component.UIOutput;
+import javax.faces.context.FacesContext;
 
-    public static final int COMPONENT = 2;
+public class SystemEventListener1 implements SystemEventListener {
+    public void processEvent(SystemEvent event)
+          throws AbortProcessingException {
+        FacesContext ctx = FacesContext.getCurrentInstance();
+        ctx.getAttributes().put("SystemEventListener1", Boolean.TRUE);
+    }
 
-    public static final int COOKIE = 3;
-
-    public static final int FACES_CONTEXT = 4;
-
-    public static final int HEADER = 5;
-
-    public static final int HEADER_VALUES = 6;
-
-    public static final int INIT_PARAM = 7;
-
-    public static final int PARAM = 8;
-
-    public static final int PARAM_VALUES = 9;
-
-    public static final int REQUEST = 10;
-
-    public static final int REQUEST_SCOPE = 11;
-
-    public static final int RESOURCE = 12;
-
-    public static final int SESSION = 13;
-
-    public static final int SESSION_SCOPE = 14;
-
-    public static final int VIEW = 15;
-
-    public static final int VIEW_SCOPE = 16;
-    
+    public boolean isListenerForSource(Object source) {
+        return (source instanceof UIOutput);
+    }
 }

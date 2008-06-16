@@ -48,14 +48,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.lang.annotation.Annotation;
 
 import javax.el.ELContext;
 import javax.el.ELException;
 import javax.el.ValueExpression;
 import javax.faces.FacesException;
-import javax.faces.application.AnnotationHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.AbortProcessingException;
@@ -93,8 +90,7 @@ import javax.faces.render.Renderer;
 
  */
 
-public abstract class UIComponent
-      implements StateHolder, SystemEventListenerHolder, AnnotationHolder {
+public abstract class UIComponent implements StateHolder, SystemEventListenerHolder {
 
     /**
      * This array represents the packages that can leverage the
@@ -820,6 +816,8 @@ private void doFind(FacesContext context, String clientId) {
      *     non-null, the component must first be removed from its previous
      *     parent (where it may have been either a child or a facet).</li>
      *     </ul></li>
+     *     <li>RELEASE_PENDING (edburns,rogerk) document ResourceDependency
+     *          requirement of FacetMap.put().</li>
      * <li>Whenever an existing facet {@link UIComponent} is removed:
      *     <ul>
      *     <li>The <code>parent</code> property of the facet must be
@@ -1051,9 +1049,9 @@ private void doFind(FacesContext context, String clientId) {
      */
     protected void pushComponentToEL(FacesContext context) {
 
-        Map<String,Object> requestMap = context.getExternalContext().getRequestMap();
-        if (requestMap != null) {
-            previouslyPushed = (UIComponent) requestMap.put("component", this);
+        Map<Object,Object> contextMap = context.getAttributes();
+        if (contextMap != null) {
+            previouslyPushed = (UIComponent) contextMap.put("component", this);
         }
 
     }
@@ -1067,13 +1065,12 @@ private void doFind(FacesContext context, String clientId) {
      */
     protected void popComponentFromEL(FacesContext context) {
 
-        Map<String, Object> requestMap =
-              context.getExternalContext().getRequestMap();
-        if (requestMap != null) {
+        Map<Object,Object> contextMap = context.getAttributes();
+        if (contextMap != null) {
             if (previouslyPushed != null) {
-                requestMap.put("component", previouslyPushed);
+                contextMap.put("component", previouslyPushed);
             } else {
-                requestMap.remove("component");
+                contextMap.remove("component");
             }
         }
 
@@ -1094,8 +1091,8 @@ private void doFind(FacesContext context, String clientId) {
     public static UIComponent getCurrentComponent() {
 
         FacesContext context = FacesContext.getCurrentInstance();
-        Map<String, Object> requestMap = context.getExternalContext().getRequestMap();
-        return (UIComponent) requestMap.get("component");
+        Map<Object, Object> contextMap = context.getAttributes();
+        return (UIComponent) contextMap.get("component");
 
     }
 
@@ -1265,23 +1262,6 @@ private void doFind(FacesContext context, String clientId) {
     }
 
 
-    // ------------------------------------------- Methods from AnnotationHolder
-
-    private Annotation[] annotations;
-
-    public void setAnnotations(Annotation[] annotations) {
-
-        if (annotations == null) {
-            throw new NullPointerException("annotations");
-        }
-        this.annotations = annotations;
-
-    }
-
-    public Annotation[] getAnnotations() {
-        return annotations;
-    }
-    
 
     // ------------------------------------------------ Lifecycle Phase Handlers
 

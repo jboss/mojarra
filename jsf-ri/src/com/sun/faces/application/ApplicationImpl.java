@@ -98,7 +98,6 @@ import com.sun.faces.util.ReflectionUtils;
 import com.sun.faces.util.Util;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
-import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.List;
 import javax.faces.event.SystemEvent;
@@ -176,7 +175,6 @@ public class ApplicationImpl extends Application {
     private Map<String,Object> converterIdMap = null;
     private Map<Class,Object> converterTypeMap = null;
     private Map<String,Object> validatorMap = null;
-    private Map<Class<?>,Annotation[]> annotationsMap = null;
     private volatile String messageBundle = null;
 
     private ArrayList<ELContextListener> elContextListeners = null;
@@ -193,7 +191,6 @@ public class ApplicationImpl extends Application {
         converterIdMap = new ConcurrentHashMap<String, Object>();
         converterTypeMap = new ConcurrentHashMap<Class, Object>();
         validatorMap = new ConcurrentHashMap<String, Object>();
-        annotationsMap = new ConcurrentHashMap<Class<?>,Annotation[]>();
         navigationHandler = new NavigationHandlerImpl(associate);
         propertyResolver = new PropertyResolverImpl();
         variableResolver = new VariableResolverImpl();
@@ -685,10 +682,6 @@ public class ApplicationImpl extends Application {
             LOGGER.log(Level.FINE, MessageFormat.format("Created component with component type of ''{0}''",
                                                         componentType));
         }
-        Annotation[] annotations = annotationsMap.get(returnVal.getClass());
-        if (annotations != null && annotations.length != 0) {
-            returnVal.setAnnotations(annotations);
-        }
         Util.processListenerForAnnotation(returnVal);
         
         return returnVal;
@@ -1157,10 +1150,7 @@ public class ApplicationImpl extends Application {
         } else {
             clazz = (Class) value;
         }
-
-        if (!annotationsMap.containsKey(clazz)) {
-            annotationsMap.put(clazz, clazz.getAnnotations());
-        }
+        
         try {
             result = clazz.newInstance();
         } catch (Throwable t) {

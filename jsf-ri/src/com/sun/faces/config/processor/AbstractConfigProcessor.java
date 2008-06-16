@@ -64,11 +64,9 @@ import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.application.NavigationHandler;
 import javax.faces.application.ViewHandler;
-import javax.faces.application.AnnotationHolder;
 import javax.el.ELResolver;
 
 import java.lang.reflect.Constructor;
-import java.lang.annotation.Annotation;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -243,12 +241,6 @@ public abstract class AbstractConfigProcessor implements ConfigProcessor {
                     }
                     if (clazz != null && returnObject == null) {
                         returnObject = clazz.newInstance();
-                        if (returnObject instanceof AnnotationHolder) {
-                            Annotation[] annotations = clazz.getAnnotations();
-                            if (annotations.length != 0) {
-                                ((AnnotationHolder) returnObject).setAnnotations(annotations);
-                            }
-                        }
                     }
                 }
 
