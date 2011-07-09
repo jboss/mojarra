@@ -55,6 +55,10 @@ import java.beans.Introspector;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 
+import javax.xml.transform.TransformerFactory;
+
+import com.sun.faces.config.ConfigManager;
+
 /**
  * <p>A set of utility methods to make working with
  * Classes and Reflection a little easier.</p>
@@ -289,7 +293,6 @@ public final class ReflectionUtils {
 
         return meta;
     }
-
 
     /**
      * <p>MetaData contains lookup methods for <code>Constructor</code>s and
