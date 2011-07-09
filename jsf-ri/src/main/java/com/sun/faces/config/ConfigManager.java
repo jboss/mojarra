@@ -68,6 +68,7 @@ import com.sun.faces.config.processor.ValidatorConfigProcessor;
 import com.sun.faces.config.processor.FaceletTaglibConfigProcessor;
 import com.sun.faces.util.FacesLogger;
 import com.sun.faces.util.Timer;
+import com.sun.faces.util.Util;
 import org.xml.sax.InputSource;
 
 import javax.faces.FacesException;
@@ -995,7 +996,8 @@ public class ConfigManager {
         private static Transformer getTransformer(String documentNS)
         throws Exception {
 
-            TransformerFactory factory = TransformerFactory.newInstance();
+            TransformerFactory factory = Util.createTransformerFactory();
+
             String xslToApply;
             if (FACES_CONFIG_1_X_DEFAULT_NS.equals(documentNS)) {
                 xslToApply = FACES_TO_1_1_PRIVATE_XSL;
