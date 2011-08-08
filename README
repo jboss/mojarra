@@ -1,0 +1,20 @@
+To be able to sync the source mojarra subversion commits to this repo, run git config -e and add:
+
+[svn-remote "svn"]
+        url = https://svn.java.net/svn/mojarra~svn
+        fetch = trunk:refs/remotes/svn/trunk
+        branches = branches/*:refs/remotes/svn/*
+        tags = tags/*:refs/remotes/svn/tags/*
+[remote "svn-mirror"]
+        url = git@github.com:jboss/mojarra.git
+        push = refs/remotes/svn/*:refs/heads/svn/*
+
+Then type:
+git svn fetch
+
+This takes a very very long time to build the metadata.
+
+Once this is complete you can now run the following to sync the latest:
+
+git svn fetch
+git push svn-mirror
