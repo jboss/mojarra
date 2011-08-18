@@ -259,60 +259,68 @@ public class ConfigManager {
      */
     private static Document[] getConfigDocuments(ServletContext sc) {
 
-        ExecutorService executor = null;
-        if (useThreads(sc)) {
-             executor = Executors.newFixedThreadPool(NUMBER_OF_TASK_THREADS);
-        }
-
-        List<FutureTask<Collection<URL>>> urlTasks =
-             new ArrayList<FutureTask<Collection<URL>>>(RESOURCE_PROVIDERS.size());
-        for (ConfigurationResourceProvider p : RESOURCE_PROVIDERS) {
-            FutureTask<Collection<URL>> t =
-                 new FutureTask<Collection<URL>>(new URLTask(p, sc));
-            urlTasks.add(t);
-            if (executor != null) {
-                executor.execute(t);
-            } else {
-                t.run();
+        // AS7-1485 - change the TCCL to use the CL that loaded the jsf classes instead of the war's CL
+        ClassLoader previousTCCL = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(ServletContext.class.getClassLoader());
+        try {
+            ExecutorService executor = null;
+            if (useThreads(sc)) {
+                executor = Executors.newFixedThreadPool(NUMBER_OF_TASK_THREADS);
             }
-        }
 
-        List<FutureTask<Document>> docTasks =
-             new ArrayList<FutureTask<Document>>(RESOURCE_PROVIDERS.size() << 1);
-        boolean validating = WebConfiguration.getInstance(sc)
-             .isOptionEnabled(ValidateFacesConfigFiles);
-        for (FutureTask<Collection<URL>> t : urlTasks) {
-            try {
-                Collection<URL> l = t.get();
-                for (URL u : l) {
-                    FutureTask<Document> d =
-                         new FutureTask<Document>(new ParseTask(validating, u));
-                    docTasks.add(d);
-                    if (executor != null) {
-                        executor.execute(d);
-                    } else {
-                        d.run();
-                    }
+            List<FutureTask<Collection<URL>>> urlTasks =
+                 new ArrayList<FutureTask<Collection<URL>>>(RESOURCE_PROVIDERS.size());
+            for (ConfigurationResourceProvider p : RESOURCE_PROVIDERS) {
+                FutureTask<Collection<URL>> t =
+                     new FutureTask<Collection<URL>>(new URLTask(p, sc));
+                urlTasks.add(t);
+                if (executor != null) {
+                    executor.execute(t);
+                } else {
+                    t.run();
                 }
-            } catch (InterruptedException ignored) {
-            } catch (Exception e) {
-                throw new ConfigurationException(e);
             }
-        }
 
-        List<Document> docs = new ArrayList<Document>(docTasks.size());
-        for (FutureTask<Document> t : docTasks) {
-            try {
-                docs.add(t.get());
-            } catch (ExecutionException e) {
-                throw new ConfigurationException(e);
-            } catch (InterruptedException ignored) { }
-        }
+            List<FutureTask<Document>> docTasks =
+                 new ArrayList<FutureTask<Document>>(RESOURCE_PROVIDERS.size() << 1);
+            boolean validating = WebConfiguration.getInstance(sc)
+                 .isOptionEnabled(ValidateFacesConfigFiles);
+            for (FutureTask<Collection<URL>> t : urlTasks) {
+                try {
+                    Collection<URL> l = t.get();
+                    for (URL u : l) {
+                        FutureTask<Document> d =
+                             new FutureTask<Document>(new ParseTask(validating, u));
+                        docTasks.add(d);
+                        if (executor != null) {
+                            executor.execute(d);
+                        } else {
+                            d.run();
+                        }
+                    }
+                } catch (InterruptedException ignored) {
+                } catch (Exception e) {
+                    throw new ConfigurationException(e);
+                }
+            }
 
-        if (executor != null) {
-            executor.shutdown();
+            List<Document> docs = new ArrayList<Document>(docTasks.size());
+            for (FutureTask<Document> t : docTasks) {
+                try {
+                    docs.add(t.get());
+                } catch (ExecutionException e) {
+                    throw new ConfigurationException(e);
+                } catch (InterruptedException ignored) { }
+            }
+
+            if (executor != null) {
+                executor.shutdown();
+            }
+            return docs.toArray(new Document[docs.size()]);
+        } finally {
+            // AS7-1485 - set the TCCL back
+            Thread.currentThread().setContextClassLoader(previousTCCL);
         }
-        return docs.toArray(new Document[docs.size()]);
 
     }
 

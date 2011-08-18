@@ -684,23 +684,32 @@ public class ConfigureListener implements ServletRequestListener,
          */
         private void scanForFacesServlet(ServletContext context) {
 
-            SAXParserFactory factory = getConfiguredFactory();
+            // AS7-1485 - change the TCCL to use the CL that loaded the jsf classes instead of the war's CL
+            ClassLoader previousTCCL = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(ServletContextListener.class.getClassLoader());
             try {
-                SAXParser parser = factory.newSAXParser();
-                parser.parse(context.getResourceAsStream(WEB_XML_PATH),
-                              new WebXmlHandler());
-            } catch (Exception e) {
-                // This probably won't happen since the container would
-                // catch it before we would, but, if we catch an exception
-                // processing the web.xml, set facesServletFound to true to
-                // default to our previous behavior of processing the faces
-                // configuration.
-                if (LOGGER.isLoggable(Level.WARNING)) {
-                    LOGGER.log(Level.WARNING,
-                               MessageFormat.format("Unable to process deployment descriptor for context ''{0}''",
-                                                    getServletContextIdentifier(context)));
+
+                SAXParserFactory factory = getConfiguredFactory();
+                try {
+                    SAXParser parser = factory.newSAXParser();
+                    parser.parse(context.getResourceAsStream(WEB_XML_PATH),
+                                  new WebXmlHandler());
+                } catch (Exception e) {
+                    // This probably won't happen since the container would
+                    // catch it before we would, but, if we catch an exception
+                    // processing the web.xml, set facesServletFound to true to
+                    // default to our previous behavior of processing the faces
+                    // configuration.
+                    if (LOGGER.isLoggable(Level.WARNING)) {
+                        LOGGER.log(Level.WARNING,
+                                   MessageFormat.format("Unable to process deployment descriptor for context ''{0}''",
+                                                        getServletContextIdentifier(context)));
+                    }
+                    facesServletPresent = true;
                 }
-                facesServletPresent = true;
+            } finally {
+               // AS7-1485 - set the TCCL back
+               Thread.currentThread().setContextClassLoader(previousTCCL);
             }
 
         } // END scanForFacesServlet
