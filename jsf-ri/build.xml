@@ -48,8 +48,8 @@
 
     <!-- ************ Per user local properties ******************************* -->
 
-    <property file="${user.home}/build.properties"/>    
-    <property file="../build.properties"/>    
+    <property file="${user.home}/build.properties"/>
+    <property file="../build.properties"/>
     <import file="${jsf.build.home}/common/ant/common.xml"/>
 
 
@@ -325,7 +325,7 @@
         <!-- Massage the version number into LogStrings.properties -->
         <replace dir="${build.classes.dir}/com/sun/faces/"
                  token="|version.string|"
-                 value="${impl.version.number} (${build.type} ${build.number})">
+                 value="2.1.7-jbossorg-1 (${build.number})">
             <include name="LogStrings*.properties"/>
         </replace>
 
@@ -365,7 +365,7 @@
               toDir="${build.classes.dir}/META-INF/services" />
         <copy toDir="${build.classes.dir}/com/sun/faces/metadata/taglib">
             <fileset dir="${conf.share.dir}">
-                <include name="*.taglib.xml" /> 
+                <include name="*.taglib.xml" />
             </fileset>
         </copy>
         <copy file="${build.generate.tld.dir}/html_basic.tld"
@@ -560,7 +560,7 @@
         <mkdir dir="${impl.test.results.dir}"/>
     </target>
 
-    <target name="run.systest" description="Run system tests">              
+    <target name="run.systest" description="Run system tests">
         <ant dir="${basedir}/systest" inheritall="false" target="test">
           <property name="force.no.cluster" value="${force.no.cluster}" />
         </ant>
@@ -572,7 +572,7 @@
         <ant dir="${basedir}/systest-per-webapp" inheritall="false"
              target="test">
           <property name="force.no.cluster" value="${force.no.cluster}" />
-        </ant>       
+        </ant>
 
         <ant dir="${basedir}/systest-per-webapp" inheritall="false"
              target="remove">
@@ -581,7 +581,7 @@
     </target>
 
    <target name="run.systest-per-webapp-on-virtual-server"
-           depends="discover.container.version" 
+           depends="discover.container.version"
            if="container.is.V3.1_no_cluster"
            description="Run per-webapp system tests on 3 virtual servers">
         <ant dir="${basedir}/systest-per-webapp" inheritall="false"
@@ -632,7 +632,7 @@
     <target name="force.run.cactus.test" depends="init.test,compile.test"
             description="Run unit tests requiring cactus, forcing reinstall">
         <ant antfile="build-tests.xml" target="force.execute.cactus.tests"/>
-    </target>   
+    </target>
 
     <target name="prepare.test.webapp" depends="init.test">
         <echo>Invoking target prepare.test.webapp</echo>
@@ -641,10 +641,10 @@
         <ant dir="${basedir}/systest" inheritall="false" target="build.war"/>
     </target>
 
-    <!-- 
-         =================================================================== 
+    <!--
+         ===================================================================
            Create the jars
-         =================================================================== 
+         ===================================================================
     -->
 
     <target name="jars" depends="compile">
@@ -689,7 +689,7 @@
 
     <target name="create.runtime.config">
 <!--    in="${build.dir}/classes/com/sun/faces/standard-html-renderkit.xml"-->
-        <xslt in="${api.dir}/doc/standard-html-renderkit.xml" 
+        <xslt in="${api.dir}/doc/standard-html-renderkit.xml"
               out="merged.xml"
               style="conf/xslt/merge-config.xsl">
         </xslt>
@@ -728,7 +728,7 @@
 
 
     <target name="passthru">
-        <ant antfile="build-tests.xml" target="passthru" 
+        <ant antfile="build-tests.xml" target="passthru"
              inheritAll="true">
           <property name="force.no.cluster" value="true" />
         </ant>
@@ -736,7 +736,7 @@
     </target>
 
     <target name="undeploy">
-        <ant antfile="build-tests.xml" target="undeploy" 
+        <ant antfile="build-tests.xml" target="undeploy"
              inheritAll="true">
           <property name="force.no.cluster" value="true" />
         </ant>
@@ -744,7 +744,7 @@
     </target>
 
     <target name="deploy">
-        <ant antfile="build-tests.xml" target="deploy" 
+        <ant antfile="build-tests.xml" target="deploy"
              inheritAll="true">
           <property name="force.no.cluster" value="true" />
         </ant>
@@ -830,5 +830,5 @@ ant -Dgpg.passphrase=PASSPHRASE HERE mvn.deploy.snapshot.local
 
     </target>
 
-    
+
 </project>
