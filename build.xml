@@ -139,7 +139,6 @@
         <jar destfile="${impl.dir}/build/lib/jboss-jsf-impl.jar">
             <zipfileset src="${javax.faces.jar}"
                         excludes="javax/**,
-                                 META-INF/resources/javax.faces/**
                                  META-INF/mojarra-jsf-api-probe-provider.xml"/>
         </jar>
     </target>
