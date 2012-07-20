@@ -132,6 +132,27 @@
       <ant dir="jsf-ri" target="main" />
     </target>
 
+    <target name="split-impl" description="Split jsf jars back into jsf-api and jsf-impl">
+        <delete file="${impl.dir}/build/lib/jboss-jsf-api.jar"/>
+        <jar destfile="${impl.dir}/build/lib/jboss-jsf-api.jar">
+            <zipfileset src="${javax.faces.jar}"
+                        excludes="com/**,
+                                  META-INF/mojarra*,
+                                  META-INF/*.tld,
+                                  META-INF/*.xml,
+                                  META-INF/*.xhtml,
+                                  META-INF/mojarra-jsf-api-probe-provider.xml,
+                                  META-INF/services/**"/>
+        </jar>
+
+        <delete file="${impl.dir}/build/lib/jboss-jsf-impl.jar"/>
+        <jar destfile="${impl.dir}/build/lib/jboss-jsf-impl.jar">
+            <zipfileset src="${javax.faces.jar}"
+                        excludes="javax/**,
+                                 META-INF/mojarra-jsf-api-probe-provider.xml"/>
+        </jar>
+    </target>
+
     <target name="main.from.source" description="Build Mojarra, including some dependencies">
        <subant target="main" inheritAll="false">
             <property name="build.source" value="true"/>
