@@ -231,7 +231,7 @@ public class ConfigureListener implements ServletRequestListener,
             }
 
             // Step 7, verify that all the configured factories are available
-            // and optionall that configured objects can be created. 
+            // and optionall that configured objects can be created.
             Verifier v = Verifier.getCurrentInstance();
             if (v != null && !v.isApplicationValid()) {
                 if (LOGGER.isLoggable(Level.SEVERE)) {
@@ -305,6 +305,8 @@ public class ConfigureListener implements ServletRequestListener,
             initContext = getInitFacesContext(context);
             if (null == initContext) {
                 initContext = new InitFacesContext(context);
+            } else {
+                InitFacesContext.getThreadInitContextMap().put(Thread.currentThread(), initContext);
             }
 
             if (webAppListener != null) {
@@ -676,7 +678,7 @@ public class ConfigureListener implements ServletRequestListener,
                 return;
             }
 
-            // register an empty resolver for now. It will be populated after the 
+            // register an empty resolver for now. It will be populated after the
             // first request is serviced.
             FacesCompositeELResolver compositeELResolverForJsp =
                     new ChainTypeCompositeELResolver(FacesCompositeELResolver.ELResolverChainType.JSP);
