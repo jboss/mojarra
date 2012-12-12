@@ -182,7 +182,7 @@ public class BeanManager implements SystemEventListener {
 
     }
 
-    
+
     public List<String> getEagerBeanNames() {
 
         return eagerBeans;
@@ -255,7 +255,7 @@ public class BeanManager implements SystemEventListener {
     public Object create(String name, FacesContext facesContext) {
         return create(name, managedBeans.get(name), facesContext);
     }
-    
+
     public Object create(String name, BeanBuilder builder, FacesContext facesContext) {
         if (builder != null) {
             if (lazyBeanValidation && !builder.isBaked()) {
@@ -332,7 +332,7 @@ public class BeanManager implements SystemEventListener {
                     } else {
                         BeanBuilder b = getBuilder(ref);
                         // If the bean has no references, then it's not
-                        // a target for cyclic detection.  
+                        // a target for cyclic detection.
                         if (b.getReferences() != null) {
                             references.add(ref);
                             validateReferences(b, references, messages);
@@ -439,7 +439,7 @@ public class BeanManager implements SystemEventListener {
 
         private static final ConcurrentMap<String,ScopeHandler> handlerMap =
              new ConcurrentHashMap<String,ScopeHandler>(5);
-        
+
         static {
             handlerMap.put(ELUtils.Scope.REQUEST.toString(), new RequestScopeHandler());
             handlerMap.put(ELUtils.Scope.VIEW.toString(), new ViewScopeHandler());
@@ -546,6 +546,7 @@ public class BeanManager implements SystemEventListener {
         private static class ViewScopeHandler implements ScopeHandler {
 
             public void handle(String name, Object bean, FacesContext context) {
+                if (context.getViewRoot().getViewMap() == null) return;
 
                 context.getViewRoot().getViewMap().put(name, bean);
 
@@ -566,7 +567,7 @@ public class BeanManager implements SystemEventListener {
             }
 
         } // END ViewScopeHandler
-        
+
 
         private static class SessionScopeHandler implements ScopeHandler  {
 
@@ -630,25 +631,25 @@ public class BeanManager implements SystemEventListener {
             public void handle(String name, Object bean, FacesContext context) {
 
                 Map scopeMap = (Map) scope.getValue(getELContext(context));
-                
+
                 // IMPLEMENTATION PENDING.  I've added this to the Frame doc:
-                
+
                 /**
-                 * The runtime must must allow the value of this element to be 
+                 * The runtime must must allow the value of this element to be
                  * an EL ValueExpression. If so, and the expression evaluates to
-                 * null, an informative error message including the expression 
+                 * null, an informative error message including the expression
                  * string and the name of the bean must be logged. If the
                  * expression evaluates to a Map, that Map is used as the
-                 * scope into which the bean will be stored. If storing the 
-                 * bean into the Map causes an Exception, the exception is 
-                 * allowed to flow up to the ExceptionHandler. If the 
+                 * scope into which the bean will be stored. If storing the
+                 * bean into the Map causes an Exception, the exception is
+                 * allowed to flow up to the ExceptionHandler. If the
                  * ValueExpression does not evaluate to a Map, a
-                 * FacesException must be thrown with a message that includes 
-                 * the expression string, the toString() of the value, and 
+                 * FacesException must be thrown with a message that includes
+                 * the expression string, the toString() of the value, and
                  * the type of the value.
-                 * 
+                 *
                  */
-                
+
                 if (scopeMap != null) {
                     synchronized (this) {
                         //noinspection unchecked
@@ -712,7 +713,7 @@ public class BeanManager implements SystemEventListener {
             /**
              * We have to use a different ELContext when evaluating the expressions
              * for the custom scopes as we don't want to cause the resolved
-             * flag on the original ELContext to be changed.  
+             * flag on the original ELContext to be changed.
              */
             private static final class CustomScopeELContext extends ELContext {
 
