@@ -39,6 +39,7 @@
  */
 package com.sun.faces.application.view;
 
+import java.io.Serializable;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 
@@ -46,7 +47,7 @@ import javax.enterprise.context.spi.CreationalContext;
  * An object used by ViewScopeContext to keep track of contextual and creational
  * context.
  */
-class ViewScopeContextObject {
+class ViewScopeContextObject implements Serializable {
 
     /**
      * Stores the contextual.
