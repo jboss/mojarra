@@ -133,7 +133,7 @@
                 <available file="${htmlunit.home}" property="ignored"/>
             </not>
             <then>
-                <get src="http://easynews.dl.sourceforge.net/sourceforge/htmlunit/htmlunit-${htmlunit.version}.zip"
+                <get src="http://downloads.sourceforge.net/project/htmlunit/htmlunit/${htmlunit.version}/htmlunit-${htmlunit.version}.zip"
                      dest="${dependency.base.dir}/downloads/htmlunit-${htmlunit.version}.zip"
                      usetimestamp="true"/>
                 <unzip

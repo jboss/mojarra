@@ -275,7 +275,7 @@
         <!-- Massage the version number into LogStrings.properties -->
         <replace dir="${build.classes.dir}/com/sun/faces/"
                  token="|version.string|"
-                 value="${impl.version}">
+                 value="1.2_15-b01-jbossorg-1 ${build.number}">
             <include name="LogStrings*.properties"/>
         </replace>
 
