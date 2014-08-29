@@ -135,7 +135,13 @@ public class SessionMap extends BaseContextMap<Object> {
         //noinspection NonSerializableObjectBoundToHttpSession
         boolean doSet = true;
         if (null != value && null != result) {
-            doSet = ! result.equals(value);
+            if (result == value) {
+                // Need this check to work around a bug in Collections.SynchronizedMap#equals()
+                // in OpenJDK 1.6 and IBM JDK 1.6 (see BZ-1134966)
+                doSet = false;
+            } else {
+                doSet = ! result.equals(value);
+            }
         }
         if (doSet) {
             session.setAttribute(key, value);
