@@ -47,7 +47,6 @@
     <xsl:output method="xml" indent="yes"/>
 
     <xsl:strip-space elements="*"/>
-    <xsl:namespace-alias stylesheet-prefix="jsf" result-prefix="#default"/>
 
     <xsl:variable name="source" select="document('../../resources/jsf-ri-config.xml')"/>
 
