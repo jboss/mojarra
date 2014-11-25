@@ -73,6 +73,10 @@ import javax.el.ELException;
 import javax.el.MethodNotFoundException;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ComponentSystemEvent;
+import javax.faces.event.ComponentSystemEventListener;
+import javax.faces.event.PostAddToViewEvent;
 import javax.faces.validator.ValidatorException;
 import javax.faces.view.Location;
 
@@ -139,7 +143,7 @@ public class ContextualCompositeMethodExpression extends MethodExpression {
     private final MethodExpression delegate;
     private final ValueExpression source;
     private final Location location;
-    private final transient UIComponent cc;
+    private String ccClientId;
 
 
     // -------------------------------------------------------- Constructors
@@ -152,8 +156,8 @@ public class ContextualCompositeMethodExpression extends MethodExpression {
         this.source = source;
         this.location = null;
         FacesContext ctx = FacesContext.getCurrentInstance();
-        this.cc = UIComponent.getCurrentCompositeComponent(ctx);
-
+        UIComponent cc = UIComponent.getCurrentCompositeComponent(ctx);
+        cc.subscribeToEvent(PostAddToViewEvent.class, new SetClientIdListener(this));
     }
 
 
@@ -165,7 +169,8 @@ public class ContextualCompositeMethodExpression extends MethodExpression {
         this.location = location;
         this.source = null;
         FacesContext ctx = FacesContext.getCurrentInstance();
-        this.cc = UIComponent.getCurrentCompositeComponent(ctx);
+        UIComponent cc = UIComponent.getCurrentCompositeComponent(ctx);
+        cc.subscribeToEvent(PostAddToViewEvent.class, new SetClientIdListener(this));
     }
 
 
@@ -281,12 +286,10 @@ public class ContextualCompositeMethodExpression extends MethodExpression {
             }
         }
         if (null == foundCc) {
-            foundCc = this.cc;
+            foundCc = ctx.getViewRoot().findComponent(ccClientId);
         }
 
-
         return manager.push(foundCc);
-
     }
 
 
@@ -296,6 +299,24 @@ public class ContextualCompositeMethodExpression extends MethodExpression {
               CompositeComponentStackManager.getManager(ctx);
         manager.pop();
 
+    }
+
+    private class SetClientIdListener implements ComponentSystemEventListener {
+
+        private ContextualCompositeMethodExpression ccME;
+        
+        public SetClientIdListener() {
+        }
+        
+        public SetClientIdListener(ContextualCompositeMethodExpression ccME) {
+            this.ccME = ccME;
+        }
+
+        @Override
+        public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
+            ccME.ccClientId = event.getComponent().getClientId();
+            event.getComponent().unsubscribeFromEvent(PostAddToViewEvent.class, this);
+        }
     }
 
 } // END ContextualCompositeMethodExpression
