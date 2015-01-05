@@ -405,7 +405,7 @@ public class ELFlash extends Flash {
         if (null == result) {
             result = getPhaseMapForReading().get(key);
         }
-        if (distributable) {
+        if (distributable && context.getExternalContext().getSession(false) != null) {
             SessionHelper sessionHelper = 
                     SessionHelper.getInstance(context.getExternalContext());
             assert(null != sessionHelper);
@@ -443,7 +443,7 @@ public class ELFlash extends Flash {
             }
             context.getApplication().publishEvent(context, PostPutFlashValueEvent.class, key);
         }
-        if (distributable) {
+        if (distributable && context.getExternalContext().getSession(false) != null) {
             SessionHelper sessionHelper = 
                     SessionHelper.getInstance(context.getExternalContext());
             assert(null != sessionHelper);
@@ -808,7 +808,7 @@ public class ELFlash extends Flash {
                 flashInnerMap.remove(cur);
             }
         }
-        if (distributable) {
+        if (distributable && FacesContext.getCurrentInstance().getExternalContext().getSession(false) != null) {
             ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
             SessionHelper sessionHelper = SessionHelper.getInstance(extContext);
             if (null != sessionHelper) {
