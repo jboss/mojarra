@@ -97,7 +97,8 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
     /**
      * Clear the current view map using the Faces context.
      *
-     * @param facesContext the Faces context.
+     * @param facesContext
+     *            the Faces context.
      */
     public void clear(FacesContext facesContext) {
         if (LOGGER.isLoggable(Level.FINEST)) {
@@ -110,8 +111,10 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
     /**
      * Clear the given view map.
      *
-     * @param facesContext the Faces context.
-     * @param viewMap the view map.
+     * @param facesContext
+     *            the Faces context.
+     * @param viewMap
+     *            the view map.
      */
     public void clear(FacesContext facesContext, Map<String, Object> viewMap) {
         if (LOGGER.isLoggable(Level.FINEST)) {
@@ -124,8 +127,10 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
     /**
      * Destroy the managed beans from the given view map.
      * 
-     * @param applicationAssociate the application associate.
-     * @param viewMap the view map.
+     * @param applicationAssociate
+     *            the application associate.
+     * @param viewMap
+     *            the view map.
      */
     private void destroyBeans(ApplicationAssociate applicationAssociate, Map<String, Object> viewMap) {
         for (Map.Entry<String, Object> entry : viewMap.entrySet()) {
@@ -146,12 +151,14 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
             }
         }
     }
-    
+
     /**
      * Destroy the managed beans from the given view map.
      *
-     * @param facesContext the Faces Context.
-     * @param viewMap the view map.
+     * @param facesContext
+     *            the Faces Context.
+     * @param viewMap
+     *            the view map.
      */
     public void destroyBeans(FacesContext facesContext, Map<String, Object> viewMap) {
         if (LOGGER.isLoggable(Level.FINEST)) {
@@ -166,7 +173,8 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
     /**
      * Get our instance.
      *
-     * @param facesContext the FacesContext.
+     * @param facesContext
+     *            the FacesContext.
      */
     public static ViewScopeManager getInstance(FacesContext facesContext) {
         if (!facesContext.getExternalContext().getApplicationMap().containsKey(VIEW_SCOPE_MANAGER)) {
@@ -178,7 +186,8 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
     /**
      * Is a listener for the given source.
      *
-     * @param source the source.
+     * @param source
+     *            the source.
      * @return true if UIViewRoot, false otherwise.
      */
     @Override
@@ -189,8 +198,10 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
     /**
      * Process the system event.
      *
-     * @param se the system event.
-     * @throws AbortProcessingException when processing needs to be aborter.
+     * @param se
+     *            the system event.
+     * @throws AbortProcessingException
+     *             when processing needs to be aborter.
      */
     @Override
     public void processEvent(SystemEvent se) throws AbortProcessingException {
@@ -206,7 +217,8 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
     /**
      * Process the PostConstructViewMap system event.
      *
-     * @param se the system event.
+     * @param se
+     *            the system event.
      */
     private void processPostConstructViewMap(SystemEvent se) {
         UIViewRoot viewRoot = (UIViewRoot) se.getSource();
@@ -225,7 +237,7 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
                 if (sessionMap.get(ACTIVE_VIEW_MAPS) == null) {
                     sessionMap.put(ACTIVE_VIEW_MAPS, (Map<String, Object>) new LRUMap<String, Object>(size));
                 }
-                
+
                 Map<String, Object> viewMaps = (Map<String, Object>) sessionMap.get(ACTIVE_VIEW_MAPS);
                 synchronized (viewMaps) {
                     String viewMapId = UUID.randomUUID().toString();
@@ -250,7 +262,8 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
     /**
      * Process the PreDestroyViewMap system event.
      *
-     * @param se the system event.
+     * @param se
+     *            the system event.
      */
     private void processPreDestroyViewMap(SystemEvent se) {
         UIViewRoot viewRoot = (UIViewRoot) se.getSource();
@@ -266,7 +279,8 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
     /**
      * Create the associated data in the session (if any).
      * 
-     * @param se the HTTP session event.
+     * @param se
+     *            the HTTP session event.
      */
     @Override
     public void sessionCreated(HttpSessionEvent se) {
@@ -274,38 +288,44 @@ public class ViewScopeManager implements HttpSessionListener, ViewMapListener {
             LOGGER.log(Level.FINEST, "Creating session for @ViewScoped beans");
         }
     }
-    
+
     /**
      * Destroy the associated data in the session.
      *
-     * @param hse the HTTP session event.
+     * @param hse
+     *            the HTTP session event.
      */
     @Override
     public void sessionDestroyed(HttpSessionEvent hse) {
         if (LOGGER.isLoggable(Level.FINEST)) {
             LOGGER.log(Level.FINEST, "Cleaning up session for @ViewScoped beans");
         }
-        
+
         HttpSession session = hse.getSession();
         Map<String, Object> activeViewMaps = (Map<String, Object>) session.getAttribute(ACTIVE_VIEW_MAPS);
-        if (activeViewMaps != null) {
-            Iterator<Object> activeViewMapsIterator = activeViewMaps.values().iterator();
-            ApplicationAssociate applicationAssociate = ApplicationAssociate.getInstance(hse.getSession().getServletContext());
-            while (activeViewMapsIterator.hasNext()) {
-                Map<String, Object> viewMap = (Map<String, Object>) activeViewMapsIterator.next();
-                destroyBeans(applicationAssociate, viewMap);
+
+        synchronized (activeViewMaps) {
+            if (activeViewMaps != null) {
+                Iterator<Object> activeViewMapsIterator = activeViewMaps.values().iterator();
+                ApplicationAssociate applicationAssociate = ApplicationAssociate.getInstance(hse.getSession()
+                        .getServletContext());
+                while (activeViewMapsIterator.hasNext()) {
+                    Map<String, Object> viewMap = (Map<String, Object>) activeViewMapsIterator.next();
+                    destroyBeans(applicationAssociate, viewMap);
+                }
+
+                activeViewMaps.clear();
+                session.removeAttribute(ACTIVE_VIEW_MAPS);
+                session.removeAttribute(ACTIVE_VIEW_MAPS_SIZE);
             }
-            
-            activeViewMaps.clear();
-            session.removeAttribute(ACTIVE_VIEW_MAPS);
-            session.removeAttribute(ACTIVE_VIEW_MAPS_SIZE);
         }
     }
 
     /**
      * Remove the eldest view map from the active view maps.
      *
-     * @param eldestViewMap the eldest view map.
+     * @param eldestViewMap
+     *            the eldest view map.
      */
     private void removeEldestViewMap(FacesContext facesContext, Map<String, Object> eldestViewMap) {
         if (LOGGER.isLoggable(Level.FINEST)) {
