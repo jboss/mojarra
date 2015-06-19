@@ -158,6 +158,13 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor {
     /** <p>The standard component family for this component.</p> */
     public static final String COMPONENT_FAMILY = "javax.faces.ViewRoot";
 
+    /**
+     * Stores the constants to keep track of the active view maps.
+     */
+    // NOTE: this constant is copied from the jsf-ri ViewScopeManager
+    // it should be moved to a proper constants file as cleary both the API package and the -ri package
+    // depend on the knowledge of this constant.
+    public static final String ACTIVE_VIEW_MAPS = "com.sun.faces.application.view.activeViewMaps";
 
     /**
      * <p>The prefix that will be used for identifiers generated
@@ -1708,11 +1715,15 @@ public class UIViewRoot extends UIComponentBase implements UniqueIdVendor {
         getTransientStateHelper().putTransient("com.sun.faces.application.view.viewMapId", viewMapId);
 
         Map<String, Object> viewMaps = (Map<String, Object>) context.getExternalContext().
-                getSessionMap().get("com.sun.faces.application.view.activeViewMaps");
+                getSessionMap().get(ACTIVE_VIEW_MAPS);
 
         if (viewMaps != null) {
-            Map<String, Object> viewMap = (Map<String, Object>) viewMaps.get(viewMapId);
-            getTransientStateHelper().putTransient("com.sun.faces.application.view.viewMap", viewMap);
+            synchronized (viewMaps) {
+                // ViewMaps is an LRU map that is not thread SAFE - therefore access to this
+                // map for reading or writing is stricly prohibited wihout synchronization
+                Map<String, Object> viewMap = (Map<String, Object>) viewMaps.get(viewMapId);
+                getTransientStateHelper().putTransient("com.sun.faces.application.view.viewMap", viewMap);
+            }
         }
     }
 
