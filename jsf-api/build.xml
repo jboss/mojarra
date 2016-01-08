@@ -198,8 +198,9 @@
         <antcall target="tools.javac"/>
 
         <taskdef name="generateComponents"
-                 classname="com.sun.faces.ant.ComponentGenTask">
+                 classname="com.sun.faces.ant.ComponentGenTask" classpath="${jsf-tools.jar}">
             <classpath>
+                <path path="${maven.compile.classpath}"/>
                 <path refid="apache.commons.classpath"/>
                 <pathelement location="${jsf-tools.jar}"/>
                 <pathelement location="${tools.dir}/build/classes"/>
@@ -774,7 +775,7 @@ javax.faces.level=ALL
            Main target
          ===================================================================
     -->
-    <target name="main" depends="update,jars"
+    <target name="main" depends="jars"
             description="Compile API classes and build JAR file"/>
 
     <!--
@@ -782,7 +783,7 @@ javax.faces.level=ALL
            Distributions target
          ===================================================================
     -->
-    <target name="dist" depends="main,javadocs"
+    <target name="dist" depends="main"
             description="Build distribution files">
 
         <!-- Create the distributions directory -->
@@ -795,24 +796,15 @@ javax.faces.level=ALL
                         prefix="${name}-${impl.version}"/>
         </zip>
 
-        <!-- Create the javadocs distribution -->
-        <zip destfile="${dist.dir}/${name}-javadocs-${impl.version}.zip">
-            <zipfileset dir="${build.dir}"
-                        includes="javadocs/**"
-                        prefix="${name}-${impl.version}"/>
-            <zipfileset dir="${build.dir}/generate"
-                        includes="facesdoc/**"
-                        prefix="${name}-${impl.version}"/>
-
-        </zip>
-
-
         <!-- Create the source distribution -->
         <zip destfile="${dist.dir}/${name}-src-${impl.version}.zip">
             <zipfileset dir="${basedir}"
                         includes="build.xml COPYRIGHT LICENSE.html"
                         prefix="${name}"/>
             <zipfileset dir="${src.dir}"
+                        excludes="**/CVS/**"
+                        prefix="${name}/src"/>
+            <zipfileset dir="${build.generate.dir}"
                         excludes="**/CVS/**"
                         prefix="${name}/src"/>
             <zipfileset dir="${test.dir}"

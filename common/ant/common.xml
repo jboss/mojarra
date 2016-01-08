@@ -52,10 +52,10 @@
                   location="${jsf.build.home}/common/lib/ant-contrib.jar"/>
         </classpath>
     </taskdef>
-    <taskdef resource="aQute/bnd/ant/taskdef.properties">
+    <taskdef name="bnd" classname="aQute.bnd.ant.BndTask">
         <classpath>
             <pathelement
-                  location="${jsf.build.home}/common/lib/bnd-0.0.249.jar"/>
+                  location="${jsf.build.home}/common/lib/bnd-1.50.0.jar"/>
         </classpath>
     </taskdef>
 
@@ -65,7 +65,7 @@
             <pathelement location="${jsf.build.home}/common/lib/sfx4j-1.0.jar"/>
         </classpath>
     </taskdef>
-    <path id="maven-ant-tasks.classpath" path="${jsf.build.home}/common/lib/maven-ant-tasks-2.0.10.jar" />
+    <path id="maven-ant-tasks.classpath" path="${jsf.build.home}/common/lib/maven-ant-tasks-2.1.3.jar" />
       <typedef resource="org/apache/maven/artifact/ant/antlib.xml"
                uri="antlib:org.apache.maven.artifact.ant"
                classpathref="maven-ant-tasks.classpath" />
@@ -167,7 +167,7 @@
     <artifact:remoteRepository id="codehaus.repo" url="http://repository.codehaus.org/"/>
     <artifact:remoteRepository id="ibiblio.repo" url="http://mirrors.ibiblio.org/pub/mirrors/maven2/"/>
 
-    <artifact:dependencies filesetId="compile.filepath" pathId="compile.path">
+    <!--artifact:dependencies filesetId="compile.filepath" pathId="compile.path">
         <dependency groupId="javax.el" artifactId="el-api" version="1.0" scope="provided"/>
         <dependency groupId="javax.servlet" artifactId="javax.servlet-api" version="3.0.1" scope="provided"/>
         <dependency groupId="javax.servlet.jsp" artifactId="javax.servlet.jsp-api" version="2.2.1" scope="provided"/>
@@ -200,7 +200,7 @@
         <dependency groupId="javax.annotation" artifactId="jsr250-api" version="1.0" scope="provided"/>
         <localRepository refid="local.repository"/>
         <remoteRepository refid="gf.nexus.repo"/>
-    </artifact:dependencies>
+    </artifact:dependencies>-->
 
 
     <!-- Intra-project dependency property names -->
@@ -244,11 +244,11 @@
     </path>
 
     <path id="compile.classpath">
-        <path refid="compile.path"/>
+        <pathelement path="${compile.path}"/>
     </path>
 
     <path id="apache.commons.classpath">
-        <path refid="commons.path"/>
+        <!--path refid="commons.path"/>-->
     </path>
 
     <!-- HtmlUnit client classpath -->
@@ -265,8 +265,8 @@
         <attribute name="destdir"/>
         <attribute name="includes" default=""/>
         <attribute name="excludes" default=""/>
-        <attribute name="source" default="1.5"/>
-        <attribute name="target" default="1.5"/>
+        <attribute name="source" default="1.6"/>
+        <attribute name="target" default="1.6"/>
         <element name="classpath" implicit="true" optional="yes"/>
         <sequential>           
             <javac srcdir="@{srcdir}"
@@ -522,7 +522,7 @@
             <property name="svn.cmd" value="svn.exe"/>
           </then>
           <else>
-            <property name="svn.cmd" value="svn"/>
+            <property name="svn.cmd" value="/bin/true"/>
           </else>
         </if>
         <var name="svninfo.out" unset="true" />

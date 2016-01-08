@@ -319,8 +319,11 @@
             </filelist>
         </concat>
 
-        <java jar="${yuicompressor.jar}" fork="true" failonerror="true"
-            args="-o ${build.classes.dir}/META-INF/resources/javax.faces/jsf.js ${build.classes.dir}/META-INF/resources/javax.faces/jsf-uncompressed.js"/>
+        <java jar="${yuicompressor.jar}" fork="true" failonerror="true">
+            <arg value="-o"/>
+            <arg value="${build.classes.dir}/META-INF/resources/javax.faces/jsf.js"/>
+            <arg value="${build.classes.dir}/META-INF/resources/javax.faces/jsf-uncompressed.js"/>
+        </java>
         <!--
             RELEASE_PENDING (rlubke,driscoll)
             For now these are copied to the root of the javax.faces.jar, but

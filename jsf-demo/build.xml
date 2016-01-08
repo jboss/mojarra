@@ -209,7 +209,7 @@
         <delete file="${dist.home}/docs/doclist.html" />
 
         <unzip src="${dist.home}/docs/javadocs-${impl.version}.zip" dest="${dist.home}/docs" />
-        <unzip src="${dist.home}/docs/jsdocs-${impl.version}.zip" dest="${dist.home}/docs" />
+        <!--<unzip src="${dist.home}/docs/jsdocs-${impl.version}.zip" dest="${dist.home}/docs" />-->
         <unzip src="${dist.home}/docs/renderkitdocs-${impl.version}.zip" dest="${dist.home}/docs" />
         <unzip src="${dist.home}/docs/vdldocs-${impl.version}.zip" dest="${dist.home}/docs" />
         <echoxml file="${dist.home}/docs/doclist.html">

@@ -1,0 +1,133 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.sun.faces</groupId>
+    <artifactId>jsf-project</artifactId>
+    <version>2.1.28.SP9-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.sun.faces</groupId>
+  <artifactId>jsf-api</artifactId>
+  <packaging>jar</packaging>
+
+  <name>JSF API</name>
+  <description>JSF (JSR 314) API</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.jboss.spec.javax.servlet</groupId>
+      <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+      <version>1.0.2.Final</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.servlet.jsp</groupId>
+      <artifactId>jboss-jsp-api_2.2_spec</artifactId>
+      <version>1.0.2.Final</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.el</groupId>
+      <artifactId>jboss-el-api_2.2_spec</artifactId>
+      <version>1.0.4.Final</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.servlet.jstl</groupId>
+      <artifactId>jboss-jstl-api_1.2_spec</artifactId>
+      <version>1.0.6.Final</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>1.0.0.GA</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.faces.build</groupId>
+      <artifactId>jsf-tools</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+   <sourceDirectory>xxx</sourceDirectory>
+   <testSourceDirectory>xxx/test</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
+        <artifactId>maven-antrun-extended-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals> 
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <delete dir="${project.build.outputDirectory}/jar-main"/>
+                <unzip src="${project.basedir}/../jsf-ri/build/lib/jboss-jsf-api.jar" dest="${project.build.outputDirectory}/jar-main" />
+                <delete dir="${project.build.outputDirectory}/jar-sources" />
+                <unzip src="${project.basedir}/dist/${project.artifactId}-intermediate-src-${project.version}.zip" dest="${project.build.outputDirectory}/jar-sources">
+                  <patternset>
+                    <include name="jsf-api-intermediate/src/**"/>
+                    <exclude name="jsf-api-intermediate/src/facesdoc/**"/>
+                    <exclude name="jsf-api-intermediate/src/last-generation"/>
+                    <include name="jsf-api-intermediate/doc/facelet-taglib_1_0.dtd"/>
+                    <include name="jsf-api-intermediate/doc/web-facesconfig_1_0.dtd"/>
+                    <include name="jsf-api-intermediate/doc/web-facesconfig_1_1.dtd"/>
+                    <include name="jsf-api-intermediate/doc/standard-html-renderkit.xml"/>
+                    <include name="jsf-api-intermediate/doc/web-*.xsd"/>
+                  </patternset>
+                  <!--mapper type="glob" from="jsf-api-intermediate/doc/*" to="jsf-api-intermediate/src/*"/-->
+                </unzip>
+              </tasks>
+            </configuration>
+          </execution>
+       </executions>
+     </plugin>
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>repack-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classesDirectory>${project.build.outputDirectory}/jar-main</classesDirectory>
+              <forceCreation>true</forceCreation>
+              <archive>
+                <manifestFile>${project.build.outputDirectory}/jar-main/META-INF/MANIFEST.MF</manifestFile>
+              </archive>
+            </configuration>
+          </execution>
+          <execution>
+            <id>repack-jar-sources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classesDirectory>${project.build.outputDirectory}/jar-sources/jsf-api-intermediate/src</classesDirectory>
+              <classifier>sources</classifier>
+              <forceCreation>true</forceCreation>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+

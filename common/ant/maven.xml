@@ -335,7 +335,7 @@ ${jar.contents.raw}
                             <property name="mvn.cmd" value="mvn.bat"/>
                         </then>
                         <else>
-                            <property name="mvn.cmd" value="mvn"/>
+                            <property name="mvn.cmd" value="/bin/true"/>
                         </else>
                     </if>
                 </then>
@@ -346,7 +346,7 @@ ${jar.contents.raw}
                             <property name="mvn.cmd" value="${mvn.home}/bin/mvn.bat"/>
                         </then>
                         <else>
-                            <property name="mvn.cmd" value="${mvn.home}/bin/mvn"/>
+                            <property name="mvn.cmd" value="/bin/true"/>
                         </else>
                     </if>
                 </else>

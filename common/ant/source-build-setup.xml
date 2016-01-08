@@ -52,10 +52,10 @@
                   location="${jsf.build.home}/common/lib/ant-contrib.jar"/>
         </classpath>
     </taskdef>
-    <taskdef resource="aQute/bnd/ant/taskdef.properties">
+    <taskdef name="bnd" classname="aQute.bnd.ant.BndTask">
         <classpath>
             <pathelement
-                  location="${jsf.build.home}/common/lib/bnd-0.0.249.jar"/>
+                  location="${jsf.build.home}/common/lib/bnd-1.50.0.jar"/>
         </classpath>
     </taskdef>
 

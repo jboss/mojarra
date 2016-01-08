@@ -84,6 +84,7 @@
 
     <property name="dependency.base.dir" value="${jsf.build.home}/dependencies"/>
     <property name="dependency.jar.dir" value="${dependency.base.dir}/jars"/>
+    <property name="js.jar" value="${dependency.jar.dir}/js.jar"/>
     <property name="yuicompressor.jar" value="${dependency.jar.dir}/yuicompressor.jar"/>
     <property name="build.javadocs.dir" value="${build.dir}/javadocs"/>
     <property name="javadoc.private" value="true"/>
@@ -328,7 +329,7 @@
         <!-- Massage the version number into LogStrings.properties -->
         <replace dir="${build.classes.dir}/com/sun/faces/"
                  token="|version.string|"
-                 value="2.1.28-jbossorg-8 ${build.number}">
+                 value="2.1.28.SP9 ${build.number}">
             <include name="LogStrings*.properties"/>
         </replace>
 
@@ -349,8 +350,11 @@
             </filelist>
         </concat>
 
-        <java jar="${yuicompressor.jar}" fork="true" failonerror="true"
-            args="-o ${build.classes.dir}/META-INF/resources/javax.faces/jsf.js ${build.classes.dir}/META-INF/resources/javax.faces/jsf-uncompressed.js"/>
+        <java classname="com.yahoo.platform.yui.compressor.Bootstrap" classpath="${js.jar}:${yuicompressor.jar}" fork="true" failonerror="true">
+            <arg value="-o"/>
+            <arg value="${build.classes.dir}/META-INF/resources/javax.faces/jsf.js"/>
+            <arg value="${build.classes.dir}/META-INF/resources/javax.faces/jsf-uncompressed.js"/>
+        </java>
         <!--
             RELEASE_PENDING (rlubke,driscoll)
             For now these are copied to the root of the javax.faces.jar, but
@@ -378,7 +382,8 @@
         <copy file="conf/xslt/facelets1_0-2_0toSchema.xsl"
               toDir="${build.classes.dir}/com/sun/faces"/>
         <unzip src="${jsf.build.home}/lib/injectionproviders.jar"
-               dest="${build.classes.dir}"/>
+               dest="${build.classes.dir}">
+        </unzip>
         <unzip src="${jsf-api-intermediate.jar}"
                dest="${build.classes.dir}">
           <patternset>
@@ -426,6 +431,9 @@
                         includes="build.xml build-tests.xml README COPYRIGHT LICENSE*.*"
                         prefix="jsf-ri-src-${impl.version}"/>
             <zipfileset dir="${source.dir}"
+                        excludes="**/CVS/**"
+                        prefix="jsf-ri-src-${impl.version}/src"/>
+            <zipfileset dir="${build.generate.dir}"
                         excludes="**/CVS/**"
                         prefix="jsf-ri-src-${impl.version}/src"/>
             <zipfileset dir="${resource.dir}"
@@ -553,7 +561,7 @@
     </target>
 
     <target name="test"
-             depends="update,init.test,compile.test,run.systest,run.junit.test,run.systest-per-webapp,run.systest-per-webapp-on-virtual-server,run.cactus.test"
+             depends="init.test,compile.test,run.systest,run.junit.test,run.systest-per-webapp,run.systest-per-webapp-on-virtual-server,run.cactus.test"
             description="Run all unit and system tests"/>
 
     <target name="test.generate.reports"
@@ -688,7 +696,7 @@
         <delete file="tmp.bnd"/>
     </target>
 
-    <target name="main" depends="update,jars"/>
+    <target name="main" depends="jars"/>
 
     <target name="create.runtime.config">
 <!--    in="${build.dir}/classes/com/sun/faces/standard-html-renderkit.xml"-->
@@ -827,9 +835,12 @@ ant -Dgpg.passphrase=PASSPHRASE HERE mvn.deploy.snapshot.local
            <link offline="true"
                  href="http://java.sun.com/javase/6/docs/api/package-list"
                  packagelistloc="${jsf.build.home}/common/ant/package-list" />
-                 
+
             <fileset dir="${source.dir}">
-                <include name="com/sun/faces/spi/**/*.java"/>
+                <include name="com/sun/faces/**/*.java"/>
+            </fileset>
+            <fileset dir="${build.generate.dir}">
+                <include name="com/sun/faces/**/*.java"/>
             </fileset>
             <classpath refid="impl.compile.classpath"/>
         </javadoc>
