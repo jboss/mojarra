@@ -96,7 +96,7 @@
                     <include name="jsf-api-intermediate/doc/standard-html-renderkit.xml" />
                     <include name="jsf-api-intermediate/doc/web-*.xsd" />
                   </patternset>
-                  <!--mapper type="glob" from="jsf-api-intermediate/doc/*" to="jsf-api-intermediate/src/*"/-->
+                  <mapper type="glob" from="jsf-api-intermediate/doc/*" to="jsf-api-intermediate/src/*"/>
                 </unzip>
               </tasks>
             </configuration>
