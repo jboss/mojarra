@@ -383,6 +383,9 @@
               toDir="${build.classes.dir}/com/sun/faces"/>
         <unzip src="${jsf.build.home}/lib/injectionproviders.jar"
                dest="${build.classes.dir}">
+            <patternset>
+              <exclude name="**/*"/>
+            </patternset>
         </unzip>
         <unzip src="${jsf-api-intermediate.jar}"
                dest="${build.classes.dir}">
