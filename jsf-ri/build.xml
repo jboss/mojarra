@@ -384,7 +384,7 @@
         <unzip src="${jsf.build.home}/lib/injectionproviders.jar"
                dest="${build.classes.dir}">
             <patternset>
-              <exclude name="**/*"/>
+                <exclude name="**/*"/>
             </patternset>
         </unzip>
         <unzip src="${jsf-api-intermediate.jar}"
