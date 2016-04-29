@@ -820,6 +820,18 @@ javax.faces.level=ALL
 
     </target>
 
+    <target name="dist-javadocs" depends="javadocs">
+        <!-- Create the javadocs distribution -->
+        <zip destfile="${dist.dir}/${name}-javadocs-${impl.version}.zip">
+            <zipfileset dir="${build.dir}"
+                        includes="javadocs/**"
+                        prefix="${name}-${impl.version}"/>
+            <zipfileset dir="${build.dir}/generate"
+                        includes="facesdoc/**"
+                        prefix="${name}-${impl.version}"/>
+
+        </zip>
+    </target>
 
     <!--
        USE THE FOLLOWING TARGETS TO PUSH VARIOUS BUILD TYPES TO YOUR LOCAL

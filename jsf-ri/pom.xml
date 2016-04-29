@@ -41,8 +41,8 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-        <artifactId>maven-antrun-extended-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
             <phase>package</phase>
@@ -50,7 +50,7 @@
               <goal>run</goal>
             </goals>
             <configuration>
-              <tasks>
+              <target>
                 <delete dir="${project.build.outputDirectory}/jar-main" />
                 <unzip src="${project.basedir}/build/lib/jboss-jsf-impl.jar" dest="${project.build.outputDirectory}/jar-main">
                   <patternset>
@@ -63,28 +63,8 @@
                     <exclude name="**/conf/**" />
                   </patternset>
                 </unzip>
-              </tasks>
-            </configuration>
-          </execution>
-          <execution>
-            <id>verify</id>
-            <phase>verify</phase>
-            <configuration>
-              <target>
-                <condition property="verify.error" value="true">
-                  <or>
-                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}.jar" when="lt" length="1900000" />
-                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}.jar" when="gt" length="2100000" />
-                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}-sources.jar" when="lt" length="1300000" />
-                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}-sources.jar" when="gt" length="1500000" />
-                  </or>
-                </condition>
-                <fail if="verify.error" message="Build failed verification." />
               </target>
             </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
           </execution>
         </executions>
         <dependencies>
@@ -131,5 +111,55 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>javadoc</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>package-javadoc</id>
+                <phase>package</phase>
+                <configuration>
+                  <target>
+                    <delete dir="${project.build.outputDirectory}/jar-javadoc" />
+                    <unzip src="${project.basedir}/dist/jsf-ri-javadocs-${project.version}.zip" dest="${project.build.outputDirectory}/jar-javadoc" />
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>repack-jar-javadoc</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+                <configuration>
+                  <classesDirectory>${project.build.outputDirectory}/jar-javadoc/jsf-ri-${project.version}/javadocs</classesDirectory>
+                  <classifier>javadoc</classifier>
+                  <forceCreation>true</forceCreation>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
 

@@ -473,6 +473,22 @@
 
    </target>
 
+   <target name="dist-javadocs" description="Build javadoc distribution files">
+
+        <mkdir dir="${dist.dir}" />
+
+        <ant dir="jsf-api"
+             antfile="build.xml"
+             target="dist-javadocs"
+             inheritAll="false"/>
+
+        <ant dir="jsf-ri"
+             antfile="build.xml"
+             target="dist-javadocs"
+             inheritAll="false"/>
+
+   </target>
+
    <target name="copy.spec.pdf" if="spec-eg-dir-available">
        <echo message="Copying PDF spec for build: ${build.number} from ${javaserverfaces-spec-eg.dir} to ${spec.snapshot.dir}" />
 
