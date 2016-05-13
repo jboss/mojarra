@@ -215,7 +215,7 @@
            <fileset dir="${dist.home}" includes="renderkitdocs/**"/>
         </zip>
         <antcall target="api.javadocs"/>
-        <antcall target="api.jsdocs"/>
+        <!--<antcall target="api.jsdocs"/>-->
         <antcall target="ri.vdldocs"/>
         <antcall target="get.pdf" />
         <if>
@@ -239,7 +239,7 @@
         <delete dir="${dist.home}/managed-bean-javadocs" />
         <delete dir="${dist.home}/jsdocs" />
         <unzip src="${dist.home}/docs/javadocs-${impl.version}.zip" dest="${dist.home}/docs" />
-        <unzip src="${dist.home}/docs/jsdocs-${impl.version}.zip" dest="${dist.home}/docs" />
+        <!--<unzip src="${dist.home}/docs/jsdocs-${impl.version}.zip" dest="${dist.home}/docs" />-->
         <unzip src="${dist.home}/docs/renderkitdocs-${impl.version}.zip" dest="${dist.home}/docs" />
         <unzip src="${dist.home}/docs/vdldocs-${impl.version}.zip" dest="${dist.home}/docs" />
         <delete file="${dist.home}/docs/javadocs-${impl.version}.zip" />

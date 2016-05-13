@@ -198,8 +198,9 @@
         <antcall target="tools.javac"/>
 
         <taskdef name="generateComponents"
-                 classname="com.sun.faces.ant.ComponentGenTask">
+                 classname="com.sun.faces.ant.ComponentGenTask" classpath="${jsf-tools.jar}">
             <classpath>
+                <path path="${maven.compile.classpath}"/>
                 <path refid="apache.commons.classpath"/>
                 <pathelement location="${jsf-tools.jar}"/>
                 <pathelement location="${tools.dir}/build/classes"/>
@@ -727,6 +728,7 @@ javax.faces.level=ALL
              <include name="expert*.png" />
              <include name="changed*.cur" />
            </fileset>
+           <fileset dir="${build.managed-bean-javadocs.dir}"/>
         </copy>
 
         <copy todir="${build.managed-bean-javadocs.dir}/">
@@ -782,7 +784,6 @@ javax.faces.level=ALL
                  protected="${javadoc.protected}"
                  windowtitle="${DocName} (${spec.version})"
                  stylesheetfile="${resources.dir}/jsf-api.css"
-                 source="1.5"
                  useexternalfile="yes"
                  doctitle="${DocName} (${spec.version} SNAPSHOT ${build.number})"
                  >
@@ -801,6 +802,7 @@ javax.faces.level=ALL
                 <exclude name="**/NoneScoped.java" />
                 <exclude name="**/RequestScoped.java" />
                 <exclude name="**/SessionScoped.java" />
+                <exclude name="**/ViewScoped.java" />
             </fileset>
             <fileset dir="${build.generate.dir}">
                 <include name="**/*.java"/>
@@ -815,7 +817,6 @@ javax.faces.level=ALL
                  protected="${javadoc.protected}"
                  windowtitle="Faces Managed Bean Annotation Specification (${spec.version})"
                  stylesheetfile="${resources.dir}/jsf-api.css"
-                 source="1.5"
                  useexternalfile="yes"
                  doctitle="Faces Managed Bean Annotation Specification (${spec.version})"
                  bottom="Copyright &#169; 2002-2009 Sun Microsystems, Inc. All Rights Reserved.">
@@ -844,7 +845,7 @@ javax.faces.level=ALL
            Main target
          ===================================================================
     -->
-    <target name="main" depends="update,jars"
+    <target name="main" depends="jars"
             description="Compile API classes and build JAR file"/>
 
     <!--
@@ -885,9 +886,12 @@ javax.faces.level=ALL
             <zipfileset dir="${src.dir}"
                         excludes="**/CVS/**"
                         prefix="${name}/src"/>
+            <zipfileset dir="${build.generate.dir}"
+                        excludes="**/CVS/**"
+                        prefix="${name}/src"/>
             <zipfileset dir="${test.dir}"
                         excludes="**/CVS/**"
-                        prefix="${name}/test"/>
+                        prefix="${name}/test" erroronmissingdir="false"/>
             <zipfileset dir="${doc.dir}"
                         includes="*.dtd,*.xsd,standard-html-renderkit.xml"
                         prefix="${name}/doc"/>

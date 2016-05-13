@@ -447,9 +447,19 @@
    </target>
 
    <target name="dist" description="Build distribution files"
-           depends="main">
+           depends="main,split-impl">
         
         <mkdir dir="${dist.dir}" />
+
+        <ant dir="jsf-api"
+             antfile="build.xml"
+             target="dist"
+             inheritAll="false"/>
+
+        <ant dir="jsf-ri"
+             antfile="build.xml"
+             target="dist"
+             inheritAll="false"/>
 
         <ant dir="${demo.dir}" 
              antfile="build.xml"
