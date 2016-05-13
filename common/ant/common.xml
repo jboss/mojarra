@@ -52,10 +52,10 @@
                   location="${jsf.build.home}/common/lib/ant-contrib.jar"/>
         </classpath>
     </taskdef>
-    <taskdef resource="aQute/bnd/ant/taskdef.properties">
+    <taskdef name="bnd" classname="aQute.bnd.ant.BndTask">
         <classpath>
             <pathelement
-                  location="${jsf.build.home}/common/lib/bnd-0.0.249.jar"/>
+                  location="${jsf.build.home}/common/lib/bnd-1.50.0.jar"/>
         </classpath>
     </taskdef>
 
@@ -165,7 +165,7 @@
     <artifact:remoteRepository id="j.n.repo.snapshot" url="https://maven.java.net/content/repositories/snapshots/"/>
     <artifact:remoteRepository id="ibiblio.repo" url="http://mirrors.ibiblio.org/pub/mirrors/maven2/"/>
 
-    <artifact:dependencies filesetId="compile.filepath" pathId="compile.path">
+    <!--<artifact:dependencies filesetId="compile.filepath" pathId="compile.path">
         <dependency groupId="javax.el" artifactId="javax.el-api" version="2.2.1" scope="provided"/>
         <dependency groupId="javax.servlet" artifactId="javax.servlet-api" version="3.0.1" scope="provided"/>
         <dependency groupId="javax.servlet.jsp" artifactId="javax.servlet.jsp-api" version="2.2.1" scope="provided"/>
@@ -213,7 +213,7 @@
         <localRepository refid="local.repository"/>
         <remoteRepository refid="j.n.repo"/>
         <remoteRepository refid="j.n.repo.snapshot"/>
-    </artifact:dependencies>
+    </artifact:dependencies>-->
 
 
     <!-- Intra-project dependency property names -->
@@ -232,7 +232,7 @@
     </path>
 
     <path id="htmlunit.compile.classpath">
-        <path refid="junit.classpath"/>
+        <pathelement path="${compile.path}"/>
         <fileset dir="${htmlunit.home}/lib" includes="htmlunit*.jar,
                                                       commons-httpclient*.jar"/>
     </path>
@@ -258,21 +258,20 @@
     </path>
 
     <path id="compile.classpath">
-        <path refid="compile.path"/>
+        <pathelement path="${compile.path}"/>
     </path>
 
     <path id="cdi.classpath">
-        <path refid="cdi.path"/>
+        <pathelement path="${compile.path}"/>
     </path>
 
 
     <path id="api-compile.classpath">
-        <path refid="jsf-spi.path"/>
-        <path refid="compile.path"/>
+        <pathelement path="${compile.path}"/>
     </path>
 
     <path id="apache.commons.classpath">
-        <path refid="commons.path"/>
+        <!--pathelement path="${compile.path}"/>-->
     </path>
 
     <!-- HtmlUnit client classpath -->
@@ -289,16 +288,12 @@
         <attribute name="destdir"/>
         <attribute name="includes" default=""/>
         <attribute name="excludes" default=""/>
-        <attribute name="source" default="1.5"/>
-        <attribute name="target" default="1.5"/>
         <element name="classpath" implicit="true" optional="yes"/>
         <sequential>           
             <javac srcdir="@{srcdir}"
                    destdir="@{destdir}"
                    debug="${compile.debug}"
                    deprecation="${compile.deprecation}"
-                   source="@{source}"
-                   target="@{target}"
                    includeAntRuntime="false"
                    includes="@{includes}"
                    excludes="@{excludes}">
@@ -577,7 +572,7 @@
             <property name="svn.cmd" value="svn.exe"/>
           </then>
           <else>
-            <property name="svn.cmd" value="svn"/>
+            <property name="svn.cmd" value="/bin/true"/>
           </else>
         </if>
         <var name="svninfo.out" unset="true" />

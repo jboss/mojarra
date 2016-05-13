@@ -1,0 +1,131 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.sun.faces</groupId>
+    <artifactId>jsf-project</artifactId>
+    <version>2.2.12.SP4-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.sun.faces</groupId>
+  <artifactId>jsf-impl</artifactId>
+  <packaging>jar</packaging>
+
+  <name>JSF Reference Implementation</name>
+  <description>JSF (JSR 314) Reference Implementation</description>
+
+  <scm>
+    <connection>scm:git:git@github.com:jboss/mojarra.git</connection>
+    <developerConnection>scm:git:git@github.com:jboss/mojarra.git</developerConnection>
+    <url>https://github.com/jboss/mojarra.git</url>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.jboss.spec.javax.faces</groupId>
+      <artifactId>jboss-jsf-api_2.2_spec</artifactId>
+      <version>2.2.12</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+   <sourceDirectory>xxx</sourceDirectory>
+   <testSourceDirectory>xxx/test</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
+        <artifactId>maven-antrun-extended-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals> 
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <delete dir="${project.build.outputDirectory}/jar-main"/>
+                <unzip src="${project.basedir}/build/lib/jboss-jsf-impl.jar" dest="${project.build.outputDirectory}/jar-main">
+                  <patternset>
+                    <exclude name="javax/**"/>
+                  </patternset>
+                </unzip>
+                <delete dir="${project.build.outputDirectory}/jar-javadoc"/>
+                <unzip src="${project.basedir}/dist/jsf-ri-javadocs-${project.version}.zip" dest="${project.build.outputDirectory}/jar-javadoc" />
+                <delete dir="${project.build.outputDirectory}/jar-sources" />
+                <unzip src="${project.basedir}/dist/jsf-ri-src-${project.version}.zip" dest="${project.build.outputDirectory}/jar-sources">
+                  <patternset>
+                    <exclude name="**/conf/**"/>
+                  </patternset>
+                </unzip>
+              </tasks>
+            </configuration>
+          </execution>
+          <execution>
+            <id>verify</id>
+            <phase>verify</phase>
+            <configuration>
+              <target>
+                <condition property="verify.error" value="true">
+                  <or>
+                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}.jar" when="lt" length="1900000"/>
+                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}.jar" when="gt" length="2100000"/>
+                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}-javadoc.jar" when="lt" length="2900000"/>
+                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}-javadoc.jar" when="gt" length="3100000"/>
+                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}-sources.jar" when="lt" length="1300000"/>
+                    <length file="${project.basedir}/jsf-ri/target/jsf-impl-${project.version}-sources.jar" when="gt" length="1500000"/>
+                  </or>
+                </condition>
+                <fail if="verify.error" message="Build failed verification."/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.7.0</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/../lib/tools.jar</systemPath>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>repack-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classesDirectory>${project.build.outputDirectory}/jar-main</classesDirectory>
+              <forceCreation>true</forceCreation>
+              <archive>
+                <manifestFile>${project.build.outputDirectory}/jar-main/META-INF/MANIFEST.MF</manifestFile>
+              </archive>
+            </configuration>
+          </execution>
+          <execution>
+            <id>repack-jar-sources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classesDirectory>${project.build.outputDirectory}/jar-sources/jsf-ri-src-${project.version}/src</classesDirectory>
+              <classifier>sources</classifier>
+              <forceCreation>true</forceCreation>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
