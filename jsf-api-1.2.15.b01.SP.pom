@@ -40,7 +40,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>javax.faces</groupId>
   <artifactId>jsf-api</artifactId>
-  <version>1.2_15-b01-jbossorg-1</version>
+  <version>1.2.15.b01.SP2</version>
   <name>JavaServer(TM) Faces 1.2 API</name>
   <description>This is the master POM file for Sun's Implementation of
   the JSF 1.2 Specification.</description>
