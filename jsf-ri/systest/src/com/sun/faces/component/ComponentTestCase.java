@@ -90,5 +90,23 @@ public class ComponentTestCase extends AbstractTestCase {
 
     }
 
+    /**
+     * Added for issue 2544.
+     */
+    public void testIssue2544() throws Exception {
+
+        int cnt = 0;
+        while (cnt <= 100) {
+            HtmlPage page = getPage("/faces/issue2544.jsp");
+            HtmlSubmitInput button = (HtmlSubmitInput) getInputContainingGivenId(page, "button");
+            button.click();
+            cnt++;
+        }
+
+        assertTrue(cnt == 101);
+
+    }
+
+
 
 } // end of class PathTestCase
