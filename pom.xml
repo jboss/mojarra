@@ -276,16 +276,21 @@
           <version>2.10</version>
         </plugin>
         <plugin>
-          <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-          <artifactId>maven-antrun-extended-plugin</artifactId>
-          <version>1.43</version>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.ant</groupId>
-              <artifactId>ant</artifactId>
-              <version>1.8.3</version>
-            </dependency>
-          </dependencies>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.9.1</version>
+          <executions>
+            <execution>
+              <id>attach-javadoc</id>
+              <phase>package</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+              <configuration>
+                <attach>false</attach>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -433,4 +438,37 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>javadoc</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>compile-javadoc</id>
+                <phase>compile</phase>
+                <configuration>
+                  <target>
+                    <delete dir="${project.basedir}/jar-javadoc" />
+                    <ant antfile="${project.basedir}/build.xml" target="dist-javadocs" inheritRefs="true" />
+                  </target>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
