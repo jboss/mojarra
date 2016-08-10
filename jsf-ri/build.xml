@@ -494,6 +494,15 @@
 
     </target>
 
+    <target name="dist-javadocs" depends="javadocs">
+        <!-- Create the javadocs distribution -->
+        <zip destfile="${dist.dir}/jsf-ri-javadocs-${impl.version}.zip">
+            <zipfileset dir="${build.dir}"
+                        includes="javadocs/**"
+                        prefix="jsf-ri-${impl.version}"/>
+        </zip>
+    </target>
+
     <target name="vdldocs">
 
       <antcall target="jsp.tlddocs" />

@@ -479,7 +479,21 @@
 
    </target>
 
+   <target name="dist-javadocs" description="Build javadoc distribution files">
 
+        <mkdir dir="${dist.dir}" />
+
+        <ant dir="jsf-api"
+             antfile="build.xml"
+             target="dist-javadocs"
+             inheritAll="false"/>
+
+        <ant dir="jsf-ri"
+             antfile="build.xml"
+             target="dist-javadocs"
+             inheritAll="false"/>
+
+   </target>
 
    <target name="deploy.spec.locally" if="spec-eg-dir-available">
 
