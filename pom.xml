@@ -1,15 +1,14 @@
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.jboss</groupId>
     <artifactId>jboss-parent</artifactId>
     <version>10</version>
-    <relativePath/>
+    <relativePath />
   </parent>
   <groupId>com.sun.faces</groupId>
   <artifactId>jsf-project</artifactId>
-  <version>2.2.13.SP4-SNAPSHOT</version>
+  <version>2.2.13.SP4</version>
   <packaging>pom</packaging>
 
   <name>JSF Parent</name>
@@ -34,7 +33,7 @@
     <connection>scm:git:git@github.com:jboss/mojarra.git</connection>
     <developerConnection>scm:git:git@github.com:jboss/mojarra.git</developerConnection>
     <url>https://github.com/jboss/mojarra.git</url>
-    <tag>HEAD</tag>
+    <tag>2.2.13.SP4</tag>
   </scm>
   <distributionManagement>
     <repository>
@@ -334,27 +333,27 @@
             <phase>compile</phase>
             <configuration>
               <target>
-                <delete dir="${project.basedir}/target"/>
-                <delete dir="${project.basedir}/jar-main"/>
-                <delete dir="${project.basedir}/jar-javadoc"/>
-                <delete dir="${project.basedir}/jar-sources"/>
-                <copy file="${project.basedir}/build.properties.glassfish" tofile="${project.basedir}/build.properties" preservelastmodified="true" overwrite="true"/>
-                <property name="compile.classpath" refid="maven.compile.classpath"/>
+                <delete dir="${project.basedir}/target" />
+                <delete dir="${project.basedir}/jar-main" />
+                <delete dir="${project.basedir}/jar-javadoc" />
+                <delete dir="${project.basedir}/jar-sources" />
+                <copy file="${project.basedir}/build.properties.glassfish" tofile="${project.basedir}/build.properties" preservelastmodified="true" overwrite="true" />
+                <property name="compile.classpath" refid="maven.compile.classpath" />
                 <taskdef resource="net/sf/antcontrib/antlib.xml">
                   <classpath>
-                    <pathelement location="${project.basedir}/common/lib/ant-contrib.jar"/>
+                    <pathelement location="${project.basedir}/common/lib/ant-contrib.jar" />
                   </classpath>
                 </taskdef>
                 <propertyregex property="build.jbossorg" input="${project.version}" regexp=".*(.SP.*)" select="\1" />
                 <propertyfile file="${project.basedir}/build.properties" comment="${project.name}-${project.version} properties">
-                  <entry key="jsf.build.home" value="${user.dir}"/>
-                  <entry key="jsf-tools.jar" value="${project.basedir}/jsf-tools/target/jsf-tools-${project.version}.jar"/>
-                  <entry key="build.source" value="true"/>
-                  <entry key="build.number" value=""/>
-                  <entry key="build.type" value="${build.jbossorg}"/>
-                  <entry key="compile.path" value="${compile.classpath}"/>
+                  <entry key="jsf.build.home" value="${user.dir}" />
+                  <entry key="jsf-tools.jar" value="${project.basedir}/jsf-tools/target/jsf-tools-${project.version}.jar" />
+                  <entry key="build.source" value="true" />
+                  <entry key="build.number" value="" />
+                  <entry key="build.type" value="${build.jbossorg}" />
+                  <entry key="compile.path" value="${compile.classpath}" />
                 </propertyfile>
-                <ant antfile="${project.basedir}/build.xml" target="dist" inheritRefs="true"/>
+                <ant antfile="${project.basedir}/build.xml" target="dist" inheritRefs="true" />
               </target>
             </configuration>
             <goals>
