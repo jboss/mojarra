@@ -345,6 +345,7 @@
                   </classpath>
                 </taskdef>
                 <propertyregex property="build.jbossorg" input="${project.version}" regexp=".*(.SP.*)" select="\1" />
+                <propertyregex property="logging.version" input="${project.version}" regexp="(.*.SP\d+?)(-SNAPSHOT)?" select="\1" />
                 <propertyfile file="${project.basedir}/build.properties" comment="${project.name}-${project.version} properties">
                   <entry key="jsf.build.home" value="${user.dir}" />
                   <entry key="jsf-tools.jar" value="${project.basedir}/jsf-tools/target/jsf-tools-${project.version}.jar" />
@@ -352,6 +353,7 @@
                   <entry key="build.number" value="" />
                   <entry key="build.type" value="${build.jbossorg}" />
                   <entry key="compile.path" value="${compile.classpath}" />
+                  <entry key="logging.version" value="${logging.version}"/>
                 </propertyfile>
                 <ant antfile="${project.basedir}/build.xml" target="dist" inheritRefs="true" />
               </target>
