@@ -13,20 +13,25 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
-        <groupId>net.java</groupId>
-        <artifactId>jvnet-parent</artifactId>
-        <version>5</version>
+        <groupId>com.sun.faces</groupId>
+        <artifactId>jsf-project</artifactId>
+        <version>2.3.3.SP1-SNAPSHOT</version>
     </parent>
-    
-    <groupId>org.glassfish</groupId>
-    <artifactId>javax.faces</artifactId>
-    <version>2.3.3-SNAPSHOT</version>
-    
+
+    <groupId>com.sun.faces</groupId>
+    <artifactId>jsf-impl</artifactId>
     <packaging>jar</packaging>
-    
-    <name>Mojarra ${project.version}</name>
+
+    <name>JSF Reference Implementation</name>
+    <description>JSF (JSR 372) Reference Implementation</description>
+
+    <scm>
+        <connection>scm:git:git@github.com:jboss/mojarra.git</connection>
+        <developerConnection>scm:git:git@github.com:jboss/mojarra.git</developerConnection>
+        <url>https://github.com/jboss/mojarra.git</url>
+    </scm>
     
     <prerequisites>
         <maven>3.1.1</maven>
@@ -1021,7 +1026,7 @@
                     <execution>
                         <id>attach-javadocs</id>
                         <configuration>
-                            <excludePackageNames>com</excludePackageNames>
+                            <excludePackageNames>javax</excludePackageNames>
                         </configuration>
                         <goals>
                             <goal>jar</goal>
@@ -1050,6 +1055,14 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
+                    <excludes>
+                        <exclude>javax/**</exclude>
+                        <exclude>com/sun/faces/vendor/GlassFish*</exclude>
+                        <exclude>com/sun/faces/vendor/Jetty*</exclude>
+                        <exclude>com/sun/faces/vendor/Tomcat*</exclude>
+                        <exclude>META-INF/services/com.sun.faces.spi.injectionprovider</exclude>
+                        <exclude>META-INF/mojarra-jsf-api-probe-provider.xml</exclude>
+                    </excludes>
                     <archive>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
@@ -1096,7 +1109,7 @@
             <plugin>
                 <groupId>biz.aQute.bnd</groupId>
                 <artifactId>bnd-maven-plugin</artifactId>
-                <version>2.4.1</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -1158,9 +1171,4 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-
-    <scm>
-        <url>http://java.net/projects/mojarra/sources</url>
-        <connection>scm:git:git://java.net/mojarra~git</connection>
-    </scm>
 </project>
