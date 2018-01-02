@@ -9,15 +9,13 @@
     (note that the jsf-tools jar is only used during the build phase and has no runtime usage)
 
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>com.sun.faces</groupId>
         <artifactId>jsf-project</artifactId>
-        <version>2.3.3.SP1-SNAPSHOT</version>
+        <version>2.3.3.SP1</version>
     </parent>
 
     <groupId>com.sun.faces</groupId>
@@ -31,7 +29,8 @@
         <connection>scm:git:git@github.com:jboss/mojarra.git</connection>
         <developerConnection>scm:git:git@github.com:jboss/mojarra.git</developerConnection>
         <url>https://github.com/jboss/mojarra.git</url>
-    </scm>
+      <tag>2.3.3.SP1</tag>
+  </scm>
     
     <prerequisites>
         <maven>3.1.1</maven>
@@ -64,18 +63,18 @@
                                     to delete any src/main directory anymore
                                 
                                 -->
-                                <delete dir="src/main/java"/>
-                                <delete dir="src/main/resources"/>
-                                <delete dir="src/main/js"/>
-                                <delete dir="src/main/template"/>
-                                <delete dir="src/main/doc"/>
+                                <delete dir="src/main/java" />
+                                <delete dir="src/main/resources" />
+                                <delete dir="src/main/js" />
+                                <delete dir="src/main/template" />
+                                <delete dir="src/main/doc" />
                                 <!--
                                 
                                     Once migration is completely we should not need to
                                     delete the bnd.bnd file anymore.
                                 
                                 -->
-                                <delete file="bnd.bnd"/>
+                                <delete file="bnd.bnd" />
                             </target>
                         </configuration>
                         <goals>
@@ -97,9 +96,9 @@
                                     Once migration is completely done this should disappear
                                 
                                 -->
-                                <property name="jsf-api-dir" value="${project.build.directory}/../../jsf-api"/>
-                                <property name="jsf-ri-dir" value="${project.build.directory}/../../jsf-ri"/>
-                                <property name="jsf-tools-dir" value="${project.build.directory}/../../jsf-tools"/>
+                                <property name="jsf-api-dir" value="${project.build.directory}/../../jsf-api" />
+                                <property name="jsf-ri-dir" value="${project.build.directory}/../../jsf-ri" />
+                                <property name="jsf-tools-dir" value="${project.build.directory}/../../jsf-tools" />
                                 
                                 <!--
                                 
@@ -107,7 +106,7 @@
                                     
                                 -->
                                 <copy todir="src/main/java">
-                                    <fileset dir="${jsf-api-dir}/src/main/java" includes="**/*.java"/>
+                                    <fileset dir="${jsf-api-dir}/src/main/java" includes="**/*.java" />
                                 </copy>
                                 
                                 <!--
@@ -116,7 +115,7 @@
                                     
                                 -->
                                 <copy todir="src/main/java">
-                                    <fileset dir="${jsf-ri-dir}/src/main/java" includes="**/*.java"/>
+                                    <fileset dir="${jsf-ri-dir}/src/main/java" includes="**/*.java" />
                                 </copy>
                                 
                                 <!--
@@ -126,9 +125,9 @@
                                 -->
                                 <copy todir="src/main/resources" includeEmptyDirs="false">
                                     <fileset dir="${jsf-api-dir}/src/main/java">
-                                        <exclude name="**/*.java"/>
-                                        <exclude name="**/*.html"/>
-                                        <exclude name="**/*.jpg"/>
+                                        <exclude name="**/*.java" />
+                                        <exclude name="**/*.html" />
+                                        <exclude name="**/*.jpg" />
                                     </fileset>
                                 </copy>
                                 
@@ -138,9 +137,7 @@
                                     
                                 -->
                                 <copy todir="src/main/resources" overwrite="true">
-                                    <fileset dir="${jsf-ri-dir}/src/main/resources" 
-                                             includes="**/*.properties,**/*.js,**/*.xsd"
-                                             excludes="**/LogStrings*.properties"/>
+                                    <fileset dir="${jsf-ri-dir}/src/main/resources" includes="**/*.properties,**/*.js,**/*.xsd" excludes="**/LogStrings*.properties" />
                                 </copy>
                                 
                                 <!--
@@ -159,12 +156,9 @@
                                     Copy META-INF/services files to src/main/resources
                                 
                                 -->
-                                <copy file="${jsf-ri-dir}/conf/share/javax.servlet.ServletContainerInitializer"
-                                    toDir="src/main/resources/META-INF/services" />
-                                <copy file="${jsf-ri-dir}/conf/share/javax.enterprise.inject.spi.Extension"
-                                    toDir="src/main/resources/META-INF/services" />
-                                <copy file="${jsf-ri-dir}/conf/share/com.sun.faces.util.cdi11.CDIUtil"
-                                    toDir="src/main/resources/META-INF/services" />
+                                <copy file="${jsf-ri-dir}/conf/share/javax.servlet.ServletContainerInitializer" toDir="src/main/resources/META-INF/services" />
+                                <copy file="${jsf-ri-dir}/conf/share/javax.enterprise.inject.spi.Extension" toDir="src/main/resources/META-INF/services" />
+                                <copy file="${jsf-ri-dir}/conf/share/com.sun.faces.util.cdi11.CDIUtil" toDir="src/main/resources/META-INF/services" />
                                 
                                 <!--
                                 
@@ -173,49 +167,44 @@
                                 -->
                                 <copy todir="src/main/resources/META-INF">
                                     <fileset dir="${jsf-ri-dir}/conf/share">
-                                        <include name="jsf_core.tld"/>
-                                        <include name="beans.xml"/>
-                                        <include name="mojarra_ext.tld"/>
-                                        <include name="mojarra_ext.taglib.xml"/>
-                                        <include name="facelet-dev*.xml"/>
-                                        <include name="error-include.xhtml"/>
+                                        <include name="jsf_core.tld" />
+                                        <include name="beans.xml" />
+                                        <include name="mojarra_ext.tld" />
+                                        <include name="mojarra_ext.taglib.xml" />
+                                        <include name="facelet-dev*.xml" />
+                                        <include name="error-include.xhtml" />
                                     </fileset>
                                 </copy>
-                                <copy file="${jsf-ri-dir}/conf/xslt/jsf1_0-1_1toSchema.xsl"
-                                    toDir="src/main/resources/com/sun/faces"/>
-                                <copy file="${jsf-ri-dir}/conf/xslt/facelets1_0-2_0toSchema.xsl"
-                                    toDir="src/main/resources/com/sun/faces"/>
+                                <copy file="${jsf-ri-dir}/conf/xslt/jsf1_0-1_1toSchema.xsl" toDir="src/main/resources/com/sun/faces" />
+                                <copy file="${jsf-ri-dir}/conf/xslt/facelets1_0-2_0toSchema.xsl" toDir="src/main/resources/com/sun/faces" />
                                 <copy todir="src/main/resources/com/sun/faces">
                                     <fileset dir="${jsf-api-dir}/doc">
-                                        <include name="*.dtd"/>
-                                        <include name="standard-html-renderkit.xml"/>
-                                        <include name="*.xsd"/>
+                                        <include name="*.dtd" />
+                                        <include name="standard-html-renderkit.xml" />
+                                        <include name="*.xsd" />
                                     </fileset>
                                 </copy>
                                 <copy todir="src/main/resources/com/sun/faces/xhtml">
                                     <fileset dir="${jsf-ri-dir}/conf/share/xhtml">
-                                        <include name="*.dtd"/>
-                                        <include name="*.ent"/>
+                                        <include name="*.dtd" />
+                                        <include name="*.ent" />
                                     </fileset>
                                 </copy>
-                                <copy file="${jsf-ri-dir}/resources/empty-faces-config.xml"
-                                    todir="src/main/resources/com/sun/faces" />
+                                <copy file="${jsf-ri-dir}/resources/empty-faces-config.xml" todir="src/main/resources/com/sun/faces" />
                                 
                                 <!--
                                 
                                     Copy API probe provider to src/main/resources
                                     
                                 -->
-                                <copy todir="src/main/resources/META-INF" 
-                                      file="${jsf-api-dir}/src/main/resources/mojarra-jsf-api-probe-provider.xml"/>
+                                <copy todir="src/main/resources/META-INF" file="${jsf-api-dir}/src/main/resources/mojarra-jsf-api-probe-provider.xml" />
                                 
                                 <!--
                                 
                                     Copy LICENSE.txt from main project directory
                                 
                                 -->
-                                <copy todir="src/main/resources/META-INF" 
-                                    file="${jsf-api-dir}/../legal/jsf-cddl/LICENSE.txt" />
+                                <copy todir="src/main/resources/META-INF" file="${jsf-api-dir}/../legal/jsf-cddl/LICENSE.txt" />
                                 
                                 <!--
                                 
@@ -223,8 +212,8 @@
                                 
                                 -->
                                 <copy todir="src/main/js">
-                                    <fileset dir="${jsf-api-dir}/src/main/resources" includes="jsf.js"/>
-                                    <fileset dir="${jsf-ri-dir}/resources" includes="mojarra.js"/>
+                                    <fileset dir="${jsf-api-dir}/src/main/resources" includes="jsf.js" />
+                                    <fileset dir="${jsf-ri-dir}/resources" includes="mojarra.js" />
                                 </copy>
                                 
                                 <!--
@@ -233,7 +222,7 @@
                                     
                                 -->
                                 <copy todir="src/main/template">
-                                    <fileset dir="${jsf-tools-dir}/template-src"/>
+                                    <fileset dir="${jsf-tools-dir}/template-src" />
                                 </copy>
                                 
                                 <!--
@@ -243,7 +232,7 @@
                                 -->
                                 <copy todir="src/main/template">
                                     <fileset dir="${jsf-api-dir}/template-src">
-                                        <include name="*Adapter.java"/>
+                                        <include name="*Adapter.java" />
                                     </fileset>
                                 </copy>
                                 
@@ -252,28 +241,14 @@
                                     Copy and generate BND configuration
                                     
                                 -->
-                                <copy file="${jsf-ri-dir}/mojarra-jsf-impl.bnd" 
-                                      tofile="${project.build.directory}/tmp.bnd"/>
-                                <replace file="${project.build.directory}/tmp.bnd"
-                                    token="@spec.version@"
-                                    value="2.3"/>
-                                <replace file="${project.build.directory}/tmp.bnd"
-                                    token="@impl.name@"
-                                    value="Mojarra"/>
-                                <replace file="${project.build.directory}/tmp.bnd"
-                                    token="@impl.version@"
-                                    value="${project.version}"/>
-                                <replace file="${project.build.directory}/tmp.bnd"
-                                    token="@full.impl.version@"
-                                    value="${project.version}"/>
-                                <replace file="${project.build.directory}/tmp.bnd"
-                                    token="@osgi.version@"
-                                    value="${project.version}"/>
-                                <replace file="${project.build.directory}/tmp.bnd"
-                                    token="@extension.name@"
-                                    value="javax.faces"/>
-                                <copy tofile="${project.project.build.directory}/../bnd.bnd" 
-                                      file="${project.build.directory}/tmp.bnd"/>
+                                <copy file="${jsf-ri-dir}/mojarra-jsf-impl.bnd" tofile="${project.build.directory}/tmp.bnd" />
+                                <replace file="${project.build.directory}/tmp.bnd" token="@spec.version@" value="2.3" />
+                                <replace file="${project.build.directory}/tmp.bnd" token="@impl.name@" value="Mojarra" />
+                                <replace file="${project.build.directory}/tmp.bnd" token="@impl.version@" value="${project.version}" />
+                                <replace file="${project.build.directory}/tmp.bnd" token="@full.impl.version@" value="${project.version}" />
+                                <replace file="${project.build.directory}/tmp.bnd" token="@osgi.version@" value="${project.version}" />
+                                <replace file="${project.build.directory}/tmp.bnd" token="@extension.name@" value="javax.faces" />
+                                <copy tofile="${project.project.build.directory}/../bnd.bnd" file="${project.build.directory}/tmp.bnd" />
                                 
                                 <!--
                                 
@@ -281,7 +256,7 @@
                                     
                                 -->
                                 <copy todir="src/main/doc">
-                                    <fileset dir="${jsf-api-dir}/doc"/>
+                                    <fileset dir="${jsf-api-dir}/doc" />
                                 </copy>
                                 
                                 <!--
@@ -289,8 +264,7 @@
                                     Copy standard-html-renderkit-impl.xml
                                     
                                 -->
-                                <copy todir="src/main/doc" 
-                                      file="${jsf-ri-dir}/src/main/resources/com/sun/faces/standard-html-renderkit-impl.xml"/>
+                                <copy todir="src/main/doc" file="${jsf-ri-dir}/src/main/resources/com/sun/faces/standard-html-renderkit-impl.xml" />
                             </target>
                         </configuration>
                         <goals>
@@ -306,8 +280,8 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
-                                <property name="jsf-ri-dir" value="${project.build.directory}/../../jsf-ri"/>
-                                <property name="jsf-tools-dir" value="${project.build.directory}/../../jsf-tools"/>
+                                <property name="jsf-ri-dir" value="${project.build.directory}/../../jsf-ri" />
+                                <property name="jsf-tools-dir" value="${project.build.directory}/../../jsf-tools" />
                                 
                                 
                                 
@@ -326,15 +300,15 @@
                                     being able to use inheritance)
                                 
                                 -->
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
                                 <condition property="osfamily" value="unix">
                                     <or>
-                                        <os family="mac"/>
-                                        <os family="unix"/>
+                                        <os family="mac" />
+                                        <os family="unix" />
                                     </or>
                                 </condition>
                                 <if>
-                                    <equals arg1="${osfamily}" arg2="unix"/>
+                                    <equals arg1="${osfamily}" arg2="unix" />
                                     <then>
                                         
                                         <!-- 
@@ -344,17 +318,15 @@
                                             (and curiously not all) are xi included as -attrs.xml)
                                          -->
                                         <copy todir="src/main/doc" overwrite="true">
-                                            <mapper type="glob"
-                                                from="*-props.xml"
-                                                to="*-attrs.xml"/>
+                                            <mapper type="glob" from="*-props.xml" to="*-attrs.xml" />
                                             <fileset dir="src/main/doc">
-                                                <include name="*-props.xml"/>
-                                                <exclude name="actionsource-props.xml"/>
-                                                <exclude name="actionsource2-props.xml"/>
-                                                <exclude name="editable-props.xml"/>
-                                                <exclude name="valueholder-props.xml"/>
-                                                <exclude name="ui*-props.xml"/>
-                                                <include name="outcometargetbutton-props.xml"/>
+                                                <include name="*-props.xml" />
+                                                <exclude name="actionsource-props.xml" />
+                                                <exclude name="actionsource2-props.xml" />
+                                                <exclude name="editable-props.xml" />
+                                                <exclude name="valueholder-props.xml" />
+                                                <exclude name="ui*-props.xml" />
+                                                <include name="outcometargetbutton-props.xml" />
                                             </fileset>
                                         </copy>
                                         
@@ -363,16 +335,10 @@
                                             by "attribute" tags
                                          -->
                                         <replace dir="src/main/doc" summary="true">
-                                            <include name="*-attrs.xml"/>
-                                            <replacefilter 
-                                                token="&lt;property"
-                                                value="&lt;attribute"/>
-                                            <replacefilter 
-                                                token="&lt;/property"
-                                                value="&lt;/attribute"/>
-                                            <replacefilter 
-                                                token="Properties"
-                                                value="Attributes"/>
+                                            <include name="*-attrs.xml" />
+                                            <replacefilter token="&lt;property" value="&lt;attribute" />
+                                            <replacefilter token="&lt;/property" value="&lt;/attribute" />
+                                            <replacefilter token="Properties" value="Attributes" />
                                         </replace>
                                         
                                         <!-- 
@@ -381,7 +347,7 @@
                                             respective content.
                                          -->
                                         <exec executable="xmllint" dir="src/main/doc" failonerror="true">
-                                            <arg line="--xinclude --format --output standard-html-renderkit.xml standard-html-renderkit-base.xml"/>
+                                            <arg line="--xinclude --format --output standard-html-renderkit.xml standard-html-renderkit-base.xml" />
                                         </exec>
                                         
                                         <!-- 
@@ -395,10 +361,9 @@
                                             </replacevalue>
                                         </replace>
                                         <delete>
-                                            <fileset dir="src/main/doc" includes="*-attrs.xml"/>
+                                            <fileset dir="src/main/doc" includes="*-attrs.xml" />
                                         </delete>
-                                        <move file="src/main/doc/standard-html-renderkit.xml"
-                                            tofile="src/main/resources/com/sun/faces/standard-html-renderkit.xml"/>
+                                        <move file="src/main/doc/standard-html-renderkit.xml" tofile="src/main/resources/com/sun/faces/standard-html-renderkit.xml" />
                                     </then>
                                 </if>
                           
@@ -415,31 +380,28 @@
                                 
                                 -->
                                 <copy todir="${jsf-tools-dir}/build/classes">
-                                    <fileset dir="${jsf-ri-dir}/src/main/resources" includes="**/LogStrings.properties"/>
+                                    <fileset dir="${jsf-ri-dir}/src/main/resources" includes="**/LogStrings.properties" />
                                 </copy>
                                 <copy todir="${jsf-tools-dir}/build/classes/com/sun/faces" flatten="true">
-                                    <fileset dir="src/main/resources/com/sun/faces" includes="*.dtd,*.xsd"/>
+                                    <fileset dir="src/main/resources/com/sun/faces" includes="*.dtd,*.xsd" />
                                 </copy>
                                 <taskdef name="generateAttrManager" classname="com.sun.faces.ant.AttributeManagerGenTask">
                                     <classpath>
-                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar"/>
+                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar" />
                                     </classpath>
                                 </taskdef>
-                                <generateAttrManager
-                                    generatorConfig="${jsf-tools-dir}/conf/HtmlBasicTaglib21.properties"
-                                    facesConfig="src/main/resources/com/sun/faces/standard-html-renderkit.xml"
-                                    fork="true">
+                                <generateAttrManager generatorConfig="${jsf-tools-dir}/conf/HtmlBasicTaglib21.properties" facesConfig="src/main/resources/com/sun/faces/standard-html-renderkit.xml" fork="true">
                                     <classpath>
-                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar"/>
-                                        <pathelement location="${jsf-tools-dir}/build/classes"/>
-                                        <path refid="maven.plugin.classpath"/>
+                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar" />
+                                        <pathelement location="${jsf-tools-dir}/build/classes" />
+                                        <path refid="maven.plugin.classpath" />
                                     </classpath>
                                 </generateAttrManager>
                                 <copy todir="${project.build.directory}/generated-sources/antrun">
-                                    <fileset dir="build/generate"/>
+                                    <fileset dir="build/generate" />
                                 </copy>
-                                <delete dir="build"/>
-                                <delete dir="${jsf-tools-dir}/build"/>
+                                <delete dir="build" />
+                                <delete dir="${jsf-tools-dir}/build" />
                                 
                                 
                                 <!-- 
@@ -462,118 +424,92 @@
                                     Generate TypedCollections.java
                                     
                                 -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.util"/>
-                                <copy file="src/main/template/TypedCollections.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/util"
-                                    filtering="true"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.util" />
+                                <copy file="src/main/template/TypedCollections.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/util" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate SharedUtils.java #1
                                     
                                 -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.application"/>
-                                <copy file="src/main/template/SharedUtils.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/application"
-                                    filtering="true"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.application" />
+                                <copy file="src/main/template/SharedUtils.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/application" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate SharedUtils.java #2
                                     
                                 -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.el"/>
-                                <copy file="src/main/template/SharedUtils.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/el"
-                                    filtering="true"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.el" />
+                                <copy file="src/main/template/SharedUtils.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/el" filtering="true" />
                                
                                 <!--
                                     
                                     Generate SharedUtils.java #3
                                     
                                 -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.config.processor"/>
-                                <copy file="src/main/template/SharedUtils.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/config/processor"
-                                    filtering="true"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.config.processor" />
+                                <copy file="src/main/template/SharedUtils.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/config/processor" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate SharedUtils.java #4
                                 
                                 -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.mgbean"/>
-                                <copy file="src/main/template/SharedUtils.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/mgbean"
-                                    filtering="true"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.mgbean" />
+                                <copy file="src/main/template/SharedUtils.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/mgbean" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate StateHolderSaver.java #1
                                     
                                 -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.application.view"/>
-                                <copy file="src/main/template/StateHolderSaver.java"
-                                      todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/view"
-                                      filtering="true"/>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/view/StateHolderSaver.java"
-                                    token="@serialVersionUID@"
-                                    value="4866548262845392093L"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.application.view" />
+                                <copy file="src/main/template/StateHolderSaver.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/view" filtering="true" />
+                                <replace file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/view/StateHolderSaver.java" token="@serialVersionUID@" value="4866548262845392093L" />
                                 
                                 <!--
                                 
                                     Generate StateHolderSaver.java #2
                                     
                                 -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.context"/>
-                                <copy file="src/main/template/StateHolderSaver.java"
-                                      todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/context"
-                                      filtering="true"/>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/com/sun/faces/context/StateHolderSaver.java"
-                                    token="@serialVersionUID@"
-                                    value="146780782953074472L"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.context" />
+                                <copy file="src/main/template/StateHolderSaver.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/context" filtering="true" />
+                                <replace file="${project.build.directory}/generated-sources/antrun/com/sun/faces/context/StateHolderSaver.java" token="@serialVersionUID@" value="146780782953074472L" />
                                     
                                 <!--
                                 
                                     Generate API MultiFieldValidationUtils.java #1
                                 
                                 -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.ext.component"/>
-                                <copy file="src/main/template/MultiFieldValidationUtils.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/ext/component"
-                                    filtering="true"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.ext.component" />
+                                <copy file="src/main/template/MultiFieldValidationUtils.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/ext/component" filtering="true" />
                                     
                                 <!--
                                 
                                    Generate MessageFactory.java #1
                                 
                                   -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.util"/>
-                                <copy file="src/main/template/MessageFactory.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/util"
-                                    filtering="true"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.util" />
+                                <copy file="src/main/template/MessageFactory.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/util" filtering="true" />
                                     
                                 <!--
                                 
                                    Generate MessageFactory.java #2
                                 
                                   -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.ext.component"/>
-                                <copy file="src/main/template/MessageFactory.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/ext/component"
-                                    filtering="true"/>
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.ext.component" />
+                                <copy file="src/main/template/MessageFactory.java" todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/ext/component" filtering="true" />
                                     
                                 
                                 <!--
@@ -581,30 +517,17 @@
                                     Generate Adapters
                                 
                                 -->
-                                <filter token="protection" value="public"/>
-                                <filter token="package" value="com.sun.faces.application"/>
-                                <copy todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/application"
-                                      filtering="true">
+                                <filter token="protection" value="public" />
+                                <filter token="package" value="com.sun.faces.application" />
+                                <copy todir="${project.build.directory}/generated-sources/antrun/com/sun/faces/application" filtering="true">
                                     <fileset dir="src/main/template">
-                                        <include name="*Adapter.java"/>
+                                        <include name="*Adapter.java" />
                                     </fileset>
                                 </copy>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/MethodBindingMethodExpressionAdapter.java"
-                                    token="@serialVersionUID@"
-                                    value="6351778415298720238L"/>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/MethodExpressionMethodBindingAdapter.java"
-                                    token="@serialVersionUID@"
-                                    value="5639227653537610567L"/>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/ValueExpressionValueBindingAdapter.java"
-                                    token="@serialVersionUID@"
-                                    value="2990621816592041196L"/>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/ValueBindingValueExpressionAdapter.java"
-                                    token="@serialVersionUID@"
-                                    value="7410146713650507654L"/>
+                                <replace file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/MethodBindingMethodExpressionAdapter.java" token="@serialVersionUID@" value="6351778415298720238L" />
+                                <replace file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/MethodExpressionMethodBindingAdapter.java" token="@serialVersionUID@" value="5639227653537610567L" />
+                                <replace file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/ValueExpressionValueBindingAdapter.java" token="@serialVersionUID@" value="2990621816592041196L" />
+                                <replace file="${project.build.directory}/generated-sources/antrun/com/sun/faces/application/ValueBindingValueExpressionAdapter.java" token="@serialVersionUID@" value="7410146713650507654L" />
                                 
                                 <!--
                                 
@@ -612,40 +535,33 @@
                                     
                                 -->
                                 <copy todir="${jsf-tools-dir}/build/classes">
-                                    <fileset dir="${jsf-ri-dir}/src/main/resources"
-                                        includes="**/LogStrings.properties"/>
+                                    <fileset dir="${jsf-ri-dir}/src/main/resources" includes="**/LogStrings.properties" />
                                 </copy>
-                                <copy todir="${jsf-tools-dir}/build/classes/com/sun/faces"
-                                    flatten="true">
-                                    <fileset dir="src/main/resources/com/sun/faces"
-                                        includes="*.dtd,*.xsd"/>
+                                <copy todir="${jsf-tools-dir}/build/classes/com/sun/faces" flatten="true">
+                                    <fileset dir="src/main/resources/com/sun/faces" includes="*.dtd,*.xsd" />
                                 </copy>
                                 <copy todir="build">
                                     <fileset dir="${jsf-tools-dir}/conf">
-                                        <include name="TAG-*"/>
+                                        <include name="TAG-*" />
                                     </fileset>
                                 </copy>
-                                <taskdef name="generateTaglib"
-                                         classname="com.sun.faces.ant.TaglibGenTask">
+                                <taskdef name="generateTaglib" classname="com.sun.faces.ant.TaglibGenTask">
                                     <classpath>
-                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar"/>
+                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar" />
                                     </classpath>
                                 </taskdef>
-                                <generateTaglib
-                                    generatorConfig="${jsf-tools-dir}/conf/HtmlBasicTaglib21.properties"
-                                    facesConfig="src/main/resources/com/sun/faces/standard-html-renderkit.xml"
-                                    fork="true">
+                                <generateTaglib generatorConfig="${jsf-tools-dir}/conf/HtmlBasicTaglib21.properties" facesConfig="src/main/resources/com/sun/faces/standard-html-renderkit.xml" fork="true">
                                     <classpath>
-                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar"/>
-                                        <pathelement location="${jsf-tools-dir}/build/classes"/>
-                                        <path refid="maven.plugin.classpath"/>
+                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar" />
+                                        <pathelement location="${jsf-tools-dir}/build/classes" />
+                                        <path refid="maven.plugin.classpath" />
                                     </classpath>
                                 </generateTaglib>
                                 <copy todir="${project.build.directory}/generated-sources/antrun/com">
-                                    <fileset dir="build/generate/com"/>
+                                    <fileset dir="build/generate/com" />
                                 </copy>
-                                <delete dir="build"/>
-                                <delete dir="${jsf-tools-dir}/build"/>
+                                <delete dir="build" />
+                                <delete dir="${jsf-tools-dir}/build" />
                                 
                                 <!--
                                 
@@ -653,112 +569,91 @@
                                     
                                 -->
                                 <copy todir="${jsf-tools-dir}/build/classes">
-                                    <fileset dir="${jsf-ri-dir}/src/main/resources"
-                                        includes="**/LogStrings.properties"/>
+                                    <fileset dir="${jsf-ri-dir}/src/main/resources" includes="**/LogStrings.properties" />
                                 </copy>
-                                <copy todir="${jsf-tools-dir}/build/classes/com/sun/faces"
-                                    flatten="true">
-                                    <fileset dir="src/main/resources/com/sun/faces"
-                                        includes="*.dtd,*.xsd"/>
+                                <copy todir="${jsf-tools-dir}/build/classes/com/sun/faces" flatten="true">
+                                    <fileset dir="src/main/resources/com/sun/faces" includes="*.dtd,*.xsd" />
                                 </copy>
-                                <taskdef name="generateComponents"
-                                    classname="com.sun.faces.ant.ComponentGenTask">
+                                <taskdef name="generateComponents" classname="com.sun.faces.ant.ComponentGenTask">
                                     <classpath>
-                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar"/>
+                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar" />
                                     </classpath>
                                 </taskdef>
-                                <generateComponents
-                                    generatorConfig="${jsf-tools-dir}/conf/HtmlBasicTaglib21.properties"
-                                    facesConfig="src/main/resources/com/sun/faces/standard-html-renderkit.xml"
-                                    fork="true">
+                                <generateComponents generatorConfig="${jsf-tools-dir}/conf/HtmlBasicTaglib21.properties" facesConfig="src/main/resources/com/sun/faces/standard-html-renderkit.xml" fork="true">
                                     <classpath>
-                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar"/>
-                                        <pathelement location="${jsf-tools-dir}/build/classes"/>
-                                        <path refid="maven.plugin.classpath"/>
+                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar" />
+                                        <pathelement location="${jsf-tools-dir}/build/classes" />
+                                        <path refid="maven.plugin.classpath" />
                                     </classpath>
                                 </generateComponents>
                                 <copy todir="${project.build.directory}/generated-sources/antrun/javax">
-                                    <fileset dir="build/generate/javax"/>
+                                    <fileset dir="build/generate/javax" />
                                 </copy>
-                                <delete dir="build"/>
-                                <delete dir="${jsf-tools-dir}/build"/>
+                                <delete dir="build" />
+                                <delete dir="${jsf-tools-dir}/build" />
                                 
                                 <!--
                                 
                                     Generate API TypedCollections.java #1
                                 
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces"/>
-                                <copy file="src/main/template/TypedCollections.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces" />
+                                <copy file="src/main/template/TypedCollections.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate API TypedCollections.java #2
                                 
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.webapp"/>
-                                <copy file="src/main/template/TypedCollections.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/webapp"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.webapp" />
+                                <copy file="src/main/template/TypedCollections.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/webapp" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate API TypedCollection.java #3
                                 
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.component"/>
-                                <copy file="src/main/template/TypedCollections.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/component"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.component" />
+                                <copy file="src/main/template/TypedCollections.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/component" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate API MessageFactory.java #3
                                     
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.component"/>
-                                <copy file="src/main/template/MessageFactory.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/component"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.component" />
+                                <copy file="src/main/template/MessageFactory.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/component" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate API MessageFactory.java #4
                                 
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.webapp"/>
-                                <copy file="src/main/template/MessageFactory.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/webapp"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.webapp" />
+                                <copy file="src/main/template/MessageFactory.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/webapp" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate API MessageFactory.java #5
                                 
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.validator"/>
-                                <copy file="src/main/template/MessageFactory.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/validator"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.validator" />
+                                <copy file="src/main/template/MessageFactory.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/validator" filtering="true" />
                                
                                 <!--
                                 
                                     Generate API MessageFactory.java #6
                                 
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.convert"/>
-                                <copy file="src/main/template/MessageFactory.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/convert"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.convert" />
+                                <copy file="src/main/template/MessageFactory.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/convert" filtering="true" />
                                     
                                 
                                 <!--
@@ -766,11 +661,9 @@
                                     Generate API MultiFieldValidationUtils.java #2
                                 
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.validator"/>
-                                <copy file="src/main/template/MultiFieldValidationUtils.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/validator"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.validator" />
+                                <copy file="src/main/template/MultiFieldValidationUtils.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/validator" filtering="true" />
                                 
                                     
                                 
@@ -779,67 +672,45 @@
                                     Generate API Adapters
                                 
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.component"/>
-                                <copy todir="${project.build.directory}/generated-sources/antrun/javax/faces/component"
-                                    filtering="true">
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.component" />
+                                <copy todir="${project.build.directory}/generated-sources/antrun/javax/faces/component" filtering="true">
                                     <fileset dir="src/main/template">
-                                        <include name="*Adapter.java"/>
+                                        <include name="*Adapter.java" />
                                     </fileset>
                                 </copy>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/javax/faces/component/MethodBindingMethodExpressionAdapter.java"
-                                    token="@serialVersionUID@"
-                                    value="7334926223014401689L"/>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/javax/faces/component/MethodExpressionMethodBindingAdapter.java"
-                                    token="@serialVersionUID@"
-                                    value="-1822420567946048452L"/>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/javax/faces/component/ValueExpressionValueBindingAdapter.java"
-                                    token="@serialVersionUID@"
-                                    value="2388977392466671243L"/>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/javax/faces/component/ValueBindingValueExpressionAdapter.java"
-                                    token="@serialVersionUID@"
-                                    value="-8015491904782686906L"/>
+                                <replace file="${project.build.directory}/generated-sources/antrun/javax/faces/component/MethodBindingMethodExpressionAdapter.java" token="@serialVersionUID@" value="7334926223014401689L" />
+                                <replace file="${project.build.directory}/generated-sources/antrun/javax/faces/component/MethodExpressionMethodBindingAdapter.java" token="@serialVersionUID@" value="-1822420567946048452L" />
+                                <replace file="${project.build.directory}/generated-sources/antrun/javax/faces/component/ValueExpressionValueBindingAdapter.java" token="@serialVersionUID@" value="2388977392466671243L" />
+                                <replace file="${project.build.directory}/generated-sources/antrun/javax/faces/component/ValueBindingValueExpressionAdapter.java" token="@serialVersionUID@" value="-8015491904782686906L" />
                                 
                                 <!--
                                 
                                     Generate API StateHolderSaver.java
                                 
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.component"/>
-                                <copy file="src/main/template/StateHolderSaver.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/component"
-                                    filtering="true"/>
-                                <replace
-                                    file="${project.build.directory}/generated-sources/antrun/javax/faces/component/StateHolderSaver.java"
-                                    token="@serialVersionUID@"
-                                    value="6470180891722042701L"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.component" />
+                                <copy file="src/main/template/StateHolderSaver.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/component" filtering="true" />
+                                <replace file="${project.build.directory}/generated-sources/antrun/javax/faces/component/StateHolderSaver.java" token="@serialVersionUID@" value="6470180891722042701L" />
                                 
                                 <!--
                                 
                                     Generate API SharedUtils.java #1
                                     
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.component"/>
-                                <copy file="src/main/template/SharedUtils.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/component"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.component" />
+                                <copy file="src/main/template/SharedUtils.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/component" filtering="true" />
                                 
                                 <!--
                                 
                                     Generate API SharedUtils.java #2
                                     
                                 -->
-                                <filter token="protection" value=""/>
-                                <filter token="package" value="javax.faces.application"/>
-                                <copy file="src/main/template/SharedUtils.java"
-                                    todir="${project.build.directory}/generated-sources/antrun/javax/faces/application"
-                                    filtering="true"/>
+                                <filter token="protection" value="" />
+                                <filter token="package" value="javax.faces.application" />
+                                <copy file="src/main/template/SharedUtils.java" todir="${project.build.directory}/generated-sources/antrun/javax/faces/application" filtering="true" />
                             </target>
                         </configuration>
                         <goals>
@@ -856,24 +727,21 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <target>
-                                <property name="jsf-api-dir" value="${project.build.directory}/../../jsf-api"/>
-                                <property name="jsf-ri-dir" value="${project.build.directory}/../../jsf-ri"/>
-                                <property name="jsf-tools-dir" value="${project.build.directory}/../../jsf-tools"/>
+                                <property name="jsf-api-dir" value="${project.build.directory}/../../jsf-api" />
+                                <property name="jsf-ri-dir" value="${project.build.directory}/../../jsf-ri" />
+                                <property name="jsf-tools-dir" value="${project.build.directory}/../../jsf-tools" />
                                 
                                 <!--
                                 
                                     Copy LogStrings
                                 
                                 -->
-                                <mkdir dir="${project.build.directory}/generated-resources/antrun"/>
+                                <mkdir dir="${project.build.directory}/generated-resources/antrun" />
                                 <copy todir="${project.build.directory}/generated-resources/antrun" overwrite="true">
-                                    <fileset dir="${jsf-ri-dir}/src/main/resources"
-                                             includes="**/LogStrings*.properties"/>
+                                    <fileset dir="${jsf-ri-dir}/src/main/resources" includes="**/LogStrings*.properties" />
                                 </copy>
-                                <replace dir="${project.build.directory}/generated-resources/antrun"
-                                    token="|version.string|"
-                                    value="${project.version}">
-                                    <include name="**/LogStrings*.properties"/>
+                                <replace dir="${project.build.directory}/generated-resources/antrun" token="|version.string|" value="${project.version}">
+                                    <include name="**/LogStrings*.properties" />
                                 </replace>
                                 
                                 <!--
@@ -883,64 +751,54 @@
                                 -->
                                 <copy todir="build">
                                     <fileset dir="${jsf-tools-dir}/conf">
-                                        <include name="TAG-*"/>
+                                        <include name="TAG-*" />
                                     </fileset>
                                 </copy>
                                 <copy todir="${jsf-tools-dir}/build/classes">
-                                    <fileset dir="${jsf-ri-dir}/src/main/resources"
-                                             includes="**/LogStrings.properties"/>
+                                    <fileset dir="${jsf-ri-dir}/src/main/resources" includes="**/LogStrings.properties" />
                                 </copy>
-                                <copy todir="${jsf-tools-dir}/build/classes/com/sun/faces"
-                                      flatten="true">
-                                    <fileset dir="${jsf-api-dir}/doc"
-                                             includes="*.dtd,*.xsd"/>
+                                <copy todir="${jsf-tools-dir}/build/classes/com/sun/faces" flatten="true">
+                                    <fileset dir="${jsf-api-dir}/doc" includes="*.dtd,*.xsd" />
                                 </copy>
-                                <taskdef name="generateTaglib"
-                                         classname="com.sun.faces.ant.TaglibGenTask">
+                                <taskdef name="generateTaglib" classname="com.sun.faces.ant.TaglibGenTask">
                                     <classpath>
-                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar"/>
+                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar" />
                                     </classpath>
                                 </taskdef>
-                                <generateTaglib
-                                    generatorConfig="${jsf-tools-dir}/conf/HtmlBasicTaglib21.properties"
-                                    facesConfig="src/main/resources/com/sun/faces/standard-html-renderkit.xml"
-                                    fork="true">
+                                <generateTaglib generatorConfig="${jsf-tools-dir}/conf/HtmlBasicTaglib21.properties" facesConfig="src/main/resources/com/sun/faces/standard-html-renderkit.xml" fork="true">
                                     <classpath>
-                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar"/>
-                                        <pathelement location="${jsf-tools-dir}/build/classes"/>
-                                        <path refid="maven.plugin.classpath"/>
+                                        <pathelement location="${jsf-tools-dir}/target/jsf-tools-${project.version}.jar" />
+                                        <pathelement location="${jsf-tools-dir}/build/classes" />
+                                        <path refid="maven.plugin.classpath" />
                                     </classpath>
                                 </generateTaglib>
-                                <copy file="build/generate/conf/share/html_basic.tld"
-                                      toDir="${project.build.directory}/generated-resources/antrun/META-INF"/>
-                                <delete dir="build"/>
-                                <delete dir="${jsf-tools-dir}/build"/>
+                                <copy file="build/generate/conf/share/html_basic.tld" toDir="${project.build.directory}/generated-resources/antrun/META-INF" />
+                                <delete dir="build" />
+                                <delete dir="${jsf-tools-dir}/build" />
                                 
                                 <!--
                                 
                                     Generate jsf(-uncompressed).js
                                 
                                 -->
-                                <mkdir dir="${project.build.directory}/generated-resources/antrun/META-INF/resources/javax.faces"/>
+                                <mkdir dir="${project.build.directory}/generated-resources/antrun/META-INF/resources/javax.faces" />
                                 <concat destfile="${project.build.directory}/generated-resources/antrun/META-INF/resources/javax.faces/jsf-uncompressed.js" fixlastline="yes">
                                     <filelist dir="src/main/js">
-                                        <file name="jsf.js"/>
+                                        <file name="jsf.js" />
                                     </filelist>
-                                    <filelist  dir="src/main/js">
-                                        <file name="mojarra.js"/>
+                                    <filelist dir="src/main/js">
+                                        <file name="mojarra.js" />
                                     </filelist>
                                 </concat>
-                                <get src="https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar" dest="yuicompressor.jar" usetimestamp="true"/>
-                                <java jar="yuicompressor.jar" fork="true" failonerror="true"
-                                    args="-o ${project.build.directory}/generated-resources/antrun/META-INF/resources/javax.faces/jsf.js ${project.build.directory}/generated-resources/antrun/META-INF/resources/javax.faces/jsf-uncompressed.js"/>
+                                <get src="https://github.com/yui/yuicompressor/releases/download/v2.4.8/yuicompressor-2.4.8.jar" dest="yuicompressor.jar" usetimestamp="true" />
+                                <java jar="yuicompressor.jar" fork="true" failonerror="true" args="-o ${project.build.directory}/generated-resources/antrun/META-INF/resources/javax.faces/jsf.js ${project.build.directory}/generated-resources/antrun/META-INF/resources/javax.faces/jsf-uncompressed.js" />
                                 
                                 <!--
                                 
                                     Unzip injectionproviders.jar
                                 
                                 -->
-                                <unzip src="${jsf-api-dir}/../lib/injectionproviders.jar"
-                                    dest="${project.build.directory}/generated-resources/antrun">
+                                <unzip src="${jsf-api-dir}/../lib/injectionproviders.jar" dest="${project.build.directory}/generated-resources/antrun">
                                     <patternset>
                                         <exclude name="META-INF/MANIFEST.MF" />
                                     </patternset>
@@ -951,21 +809,17 @@
                                     Generate jsf-ri-runtime.xml
                                 
                                 -->
-                                <xslt in="src/main/resources/com/sun/faces/standard-html-renderkit.xml" 
-                                      out="merged.xml"
-                                      style="${jsf-ri-dir}/conf/xslt/merge-config.xsl">
+                                <xslt in="src/main/resources/com/sun/faces/standard-html-renderkit.xml" out="merged.xml" style="${jsf-ri-dir}/conf/xslt/merge-config.xsl">
                                 </xslt>
                                 <replace file="${basedir}/merged.xml">
                                     <replacetoken><![CDATA[xmlns:jsf="http://xmlns.jcp.org/xml/ns/javaee"]]></replacetoken>
-                                    <replacevalue><![CDATA[]]></replacevalue>
+                                    <replacevalue />
                                 </replace>
                                 <replace file="${basedir}/merged.xml">
                                     <replacetoken><![CDATA[ >]]></replacetoken>
                                     <replacevalue><![CDATA[>]]></replacevalue>
                                 </replace>
-                                <xslt in="${basedir}/merged.xml"
-                                      out="${project.build.directory}/generated-resources/antrun/com/sun/faces/jsf-ri-runtime.xml"
-                                      style="${jsf-ri-dir}/conf/xslt/prune-tool-data.xsl">
+                                <xslt in="${basedir}/merged.xml" out="${project.build.directory}/generated-resources/antrun/com/sun/faces/jsf-ri-runtime.xml" style="${jsf-ri-dir}/conf/xslt/prune-tool-data.xsl">
                                 </xslt>
                                 <replace file="${project.build.directory}/generated-resources/antrun/com/sun/faces/jsf-ri-runtime.xml">
                                     <replacetoken><![CDATA[xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"]]></replacetoken>
@@ -977,13 +831,12 @@
                                 <replace file="${project.build.directory}/generated-resources/antrun/com/sun/faces/jsf-ri-runtime.xml">
                                     <replacetoken><![CDATA[<faces-config>]]></replacetoken>
                                     <replacevalue><![CDATA[
-<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
     version="2.3">]]>
                                     </replacevalue>
                                 </replace>
-                                <delete file="${basedir}/merged.xml"/>
+                                <delete file="${basedir}/merged.xml" />
                             </target>
                         </configuration>
                         <goals>
