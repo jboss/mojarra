@@ -52,7 +52,7 @@
     </parent>
     <groupId>com.sun.faces.build</groupId>
     <artifactId>jsf-tools</artifactId>
-    <version>2.3.3.SP1</version>
+    <version>2.3.3.SP2-SNAPSHOT</version>
     <description>
         Java code executed at build time
     </description>
@@ -215,9 +215,4 @@
     </profile>
 
   </profiles>
-
-
-  <scm>
-    <tag>2.3.3.SP1</tag>
-  </scm>
 </project>
