@@ -8,7 +8,7 @@
   </parent>
   <groupId>com.sun.faces</groupId>
   <artifactId>jsf-project</artifactId>
-  <version>2.2.13.SP5-SNAPSHOT</version>
+  <version>2.2.13.SP5</version>
   <packaging>pom</packaging>
 
   <name>JSF Parent</name>
@@ -33,7 +33,7 @@
     <connection>scm:git:git@github.com:jboss/mojarra.git</connection>
     <developerConnection>scm:git:git@github.com:jboss/mojarra.git</developerConnection>
     <url>https://github.com/jboss/mojarra.git</url>
-    <tag>HEAD</tag>
+    <tag>2.2.13.SP5</tag>
   </scm>
   <distributionManagement>
     <repository>
@@ -353,7 +353,7 @@
                   <entry key="build.number" value="" />
                   <entry key="build.type" value="${build.jbossorg}" />
                   <entry key="compile.path" value="${compile.classpath}" />
-                  <entry key="logging.version" value="${logging.version}"/>
+                  <entry key="logging.version" value="${logging.version}" />
                 </propertyfile>
                 <ant antfile="${project.basedir}/build.xml" target="dist" inheritRefs="true" />
               </target>
