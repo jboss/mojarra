@@ -405,11 +405,12 @@ public class ELFlash extends Flash {
         if (null == result) {
             result = getPhaseMapForReading().get(key);
         }
-        if (distributable) {
+        if (distributable && context.getExternalContext().getSession(false) != null) {
             SessionHelper sessionHelper = 
                     SessionHelper.getInstance(context.getExternalContext());
-            assert(null != sessionHelper);
-            sessionHelper.update(context.getExternalContext(), this);
+            if (sessionHelper != null) {
+                sessionHelper.update(context.getExternalContext(), this);
+            }
         }
 
         if (LOGGER.isLoggable(Level.FINEST)) {
@@ -443,11 +444,12 @@ public class ELFlash extends Flash {
             }
             context.getApplication().publishEvent(context, PostPutFlashValueEvent.class, key);
         }
-        if (distributable) {
+        if (distributable && context.getExternalContext().getSession(false) != null) {
             SessionHelper sessionHelper = 
                     SessionHelper.getInstance(context.getExternalContext());
-            assert(null != sessionHelper);
-            sessionHelper.update(context.getExternalContext(), this);
+            if (sessionHelper != null) {
+                sessionHelper.update(context.getExternalContext(), this);
+            }
         }
         
         return result;
@@ -808,7 +810,7 @@ public class ELFlash extends Flash {
                 flashInnerMap.remove(cur);
             }
         }
-        if (distributable) {
+        if (distributable && FacesContext.getCurrentInstance().getExternalContext().getSession(false) != null) {
             ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
             SessionHelper sessionHelper = SessionHelper.getInstance(extContext);
             if (null != sessionHelper) {
