@@ -67,7 +67,7 @@ public class ViewScopeContextManager {
                 LOGGER.log(Level.SEVERE, "CDI 1.1 events not enabled", ex);
             }
         }
-        beanManager = (BeanManager) Util.getCdiBeanManager(facesContext);
+        beanManager = Util.getCdiBeanManager(facesContext);
         WebConfiguration config = WebConfiguration.getInstance(facesContext.getExternalContext());
         distributable = config.isOptionEnabled(EnableDistributable);
     }
@@ -138,15 +138,15 @@ public class ViewScopeContextManager {
         if (!(contextual instanceof PassivationCapable)) {
             throw new IllegalArgumentException("ViewScoped bean " + contextual.toString() + " must be PassivationCapable, but is not.");
         }
-            
+
         T result = contextual.create(creational);
 
         if (result != null) {
             String name = getName(result);
             facesContext.getViewRoot().getViewMap(true).put(name, result);
             String passivationCapableId = ((PassivationCapable)contextual).getId();
-            
-            getContextMap(facesContext).put(passivationCapableId, 
+
+            getContextMap(facesContext).put(passivationCapableId,
                     new ViewScopeContextObject(passivationCapableId, name));
         }
 
@@ -167,7 +167,7 @@ public class ViewScopeContextManager {
             for (Map.Entry<String, ViewScopeContextObject> entry : contextMap.entrySet()) {
                 String passivationCapableId = entry.getKey();
                 Contextual contextual = beanManager.getPassivationCapableBean(passivationCapableId);
-                
+
                 ViewScopeContextObject contextObject = entry.getValue();
                 CreationalContext creationalContext = beanManager.createCreationalContext(contextual);
                 // We can no longer get this from the contextObject. Instead we must call
@@ -212,7 +212,7 @@ public class ViewScopeContextManager {
             if (!(contextual instanceof PassivationCapable)) {
                 throw new IllegalArgumentException("ViewScoped bean " + contextual.toString() + " must be PassivationCapable, but is not.");
             }
-            
+
             ViewScopeContextObject contextObject = contextMap.get(((PassivationCapable)contextual).getId());
 
             if (contextObject != null) {
@@ -311,7 +311,7 @@ public class ViewScopeContextManager {
 
         return result;
     }
-    
+
     /**
      * Get the name of the bean for the given object.
      *
@@ -360,7 +360,7 @@ public class ViewScopeContextManager {
 
     public void fireInitializedEvent(FacesContext facesContext, UIViewRoot root) {
         if (isCdiOneOneOrGreater && null != viewScopedCDIEventFireHelperImplClass) {
-            BeanManager beanManager = (BeanManager) Util.getCdiBeanManager(facesContext);
+            BeanManager beanManager = Util.getCdiBeanManager(facesContext);
             if (null != beanManager) {
                 Set<Bean<?>> availableBeans = beanManager.getBeans(viewScopedCDIEventFireHelperImplClass);
                 if (null != availableBeans && !availableBeans.isEmpty()) {
@@ -380,7 +380,7 @@ public class ViewScopeContextManager {
 
     public void fireDestroyedEvent(FacesContext facesContext, UIViewRoot root) {
         if (isCdiOneOneOrGreater && null != viewScopedCDIEventFireHelperImplClass) {
-            BeanManager beanManager = (BeanManager) Util.getCdiBeanManager(facesContext);
+            BeanManager beanManager = Util.getCdiBeanManager(facesContext);
             if (null != beanManager) {
                 Set<Bean<?>> availableBeans = beanManager.getBeans(viewScopedCDIEventFireHelperImplClass);
                 if (null != availableBeans && !availableBeans.isEmpty()) {
