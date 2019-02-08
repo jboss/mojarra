@@ -21,21 +21,49 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
-        <groupId>org.glassfish</groupId>
-        <artifactId>mojarra-parent</artifactId>
-        <version>2.3.9</version>
+        <groupId>com.sun.faces</groupId>
+        <artifactId>jsf-project</artifactId>
+        <version>2.3.9.SP01-SNAPSHOT</version>
     </parent>
-   
+
     <groupId>com.sun.faces.build</groupId>
     <artifactId>jsf-tools</artifactId>
     
-    <name>Mojarra ${project.version} - JSF Tools</name>
+    <name>Mojarra JSF Tools ${project.version} </name>
     
     <description>
         Java code executed at build time
     </description>
+    <packaging>jar</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-java-version</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <!-- JDK 1.8 is required to build Mojarra 2.3.x. -->
+                                <requireJavaVersion>
+                                    <message>
+                                        To build this project, JDK 1.8 is required. Please install it.
+                                    </message>
+                                    <version>[1.8,)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
     	 <dependency>
