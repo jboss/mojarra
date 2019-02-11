@@ -45,6 +45,8 @@ import com.sun.faces.application.ApplicationAssociate;
 import com.sun.faces.config.WebConfiguration;
 import com.sun.faces.config.WebConfiguration.WebContextInitParameter;
 import com.sun.faces.context.StateContext;
+
+import javax.faces.component.visit.VisitHint;
 import javax.faces.view.facelets.Facelet;
 import com.sun.faces.facelets.el.ContextualCompositeMethodExpression;
 import com.sun.faces.facelets.el.VariableMapperWrapper;
@@ -66,10 +68,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.el.ExpressionFactory;
@@ -148,11 +152,11 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
 
     // Array of viewId prefixes that should be handled by Facelets
     private String[] prefixesArray;
-    
+
     public static final String IS_BUILDING_METADATA =
           FaceletViewHandlingStrategy.class.getName() + ".IS_BUILDING_METADATA";
-    
-    public static final String RESOURCE_LIBRARY_CONTRACT_DATA_STRUCTURE_KEY = 
+
+    public static final String RESOURCE_LIBRARY_CONTRACT_DATA_STRUCTURE_KEY =
               FaceletViewHandlingStrategy.class.getName() + ".RESOURCE_LIBRARY_CONTRACT_DATA_STRUCTURE";
 
     private MethodRetargetHandlerManager retargetHandlerManager =
@@ -192,28 +196,28 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
     @Override
     public StateManagementStrategy getStateManagementStrategy(FacesContext context, String viewId) {
         StateManagementStrategy result;
-        
+
         StateContext stateCtx = StateContext.getStateContext(context);
         if (stateCtx.isPartialStateSaving(context, viewId)) {
             result = new FaceletPartialStateManagementStrategy(context);
         } else {
             // Spec for this method says:
-            
-            // Implementations that provide the VDL for Facelets for JSF 2.0 
+
+            // Implementations that provide the VDL for Facelets for JSF 2.0
             // and later must return non-null from this method.
-            
+
             // Limit the specification violating change to the case where
             // we are running in Trinidad.
-            // 
+            //
             result = isTrinidadStateManager ? null : new JspStateManagementStrategy(context);
         }
-        
+
         return result;
     }
-    
+
     /*
      * Called by Application._createComponent(Resource).
-     * 
+     *
      * This method creates two temporary UIComponent instances to aid in
      * the creation of the compcomp metadata.  These instances no longer
      * needed after the method returns and can be safely garbage
@@ -239,7 +243,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
      */
 
     @Override
-    public BeanInfo getComponentMetadata(FacesContext context, 
+    public BeanInfo getComponentMetadata(FacesContext context,
             Resource ccResource) {
 
         DefaultFaceletFactory factory = (DefaultFaceletFactory)
@@ -251,7 +255,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
 
         return metadataCache.get(ccResource);
     }
-    
+
     public BeanInfo createComponentMetadata(FacesContext context,
             Resource ccResource) {
 
@@ -279,9 +283,9 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         tmp.getFacets().put(UIComponent.COMPOSITE_FACET_NAME, facetComponent);
         // We have to put the resource in here just so the classes that eventually
         // get called by facelets have access to it.
-        tmp.getAttributes().put(Resource.COMPONENT_RESOURCE_KEY, 
+        tmp.getAttributes().put(Resource.COMPONENT_RESOURCE_KEY,
                 ccResource);
-        
+
         Facelet f;
 
         try {
@@ -292,7 +296,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
                 public ValueExpression resolveVariable(String variable) {
                     return super.resolveVariable(variable);
                 }
-                
+
             };
             ctx.setVariableMapper(wrapper);
             context.getAttributes().put(IS_BUILDING_METADATA, Boolean.TRUE);
@@ -332,9 +336,9 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
     // to discard tmp and facetComponent.  The compcomp metadata
     // should be cacheable and shareable across threads, but this is
     // not yet implemented.
-        result = (CompositeComponentBeanInfo) 
+        result = (CompositeComponentBeanInfo)
                 tmp.getAttributes().get(UIComponent.BEANINFO_KEY);
-        
+
         return result;
     }
 
@@ -346,7 +350,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         return new ViewMetadataImpl(viewId);
 
     }
-    
+
     /**
      * @see javax.faces.view.ViewDeclarationLanguage#getScriptComponentResource(javax.faces.context.FacesContext, javax.faces.application.Resource)
      */
@@ -362,13 +366,13 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
 
         String resourceName = componentResource.getResourceName();
         if (resourceName.endsWith(".xhtml")) {
-            resourceName = resourceName.substring(0, 
+            resourceName = resourceName.substring(0,
                     resourceName.length() - 6) + ".groovy";
             ResourceHandler resourceHandler = context.getApplication().getResourceHandler();
-            result = resourceHandler.createResource(resourceName, 
+            result = resourceHandler.createResource(resourceName,
                     componentResource.getLibraryName());
         }
-        
+
         return result;
     }
 
@@ -406,19 +410,19 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
             }
 
             ExternalContext extContext = ctx.getExternalContext();
-            
+
             /*
              * Make sure we have a session here if we are using server state
              * saving. The WriteBehindStateWriter needs an active session when
              * it writes out state to a server session.
-             * 
+             *
              * Note if you flag a view as transient then we won't acquire the
              * session as you are stating it does not need one.
              */
             if (isServerStateSaving() && !viewToRender.isTransient()) {
                 getSession(ctx);
-            }            
-            
+            }
+
             Writer outputWriter = extContext.getResponseOutputWriter();
             stateWriter = new WriteBehindStateWriter(outputWriter,
                                                      ctx,
@@ -441,7 +445,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
                 if (ctx.isProjectStage(ProjectStage.Development)) {
                     FormOmittedChecker.check(ctx);
                 }
-                
+
                 // render the view to the response
                 String XMLDECL = Util.getXMLDECLFromFacesContextAttributes(ctx);
                 if (null != XMLDECL) {
@@ -490,7 +494,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
 
     /**
      * Are we saving state server side?
-     * 
+     *
      * @return true if we are, false otherwise.
      */
     private boolean isServerStateSaving() {
@@ -504,7 +508,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
 
     /**
      * Get a session (if we are using server state saving).
-     * 
+     *
      * @param context the Faces context.
      * @return the session, or null if we are not using server state saving.
      */
@@ -516,13 +520,13 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         }
         return result;
     }
-    
+
     /**
      * <p>
      * If {@link UIDebug#debugRequest(javax.faces.context.FacesContext)}} is <code>true</code>,
      * simply return a new UIViewRoot(), otherwise, call the default logic.
      * </p>
-     * @see ViewDeclarationLanguage#restoreView(javax.faces.context.FacesContext, java.lang.String) 
+     * @see ViewDeclarationLanguage#restoreView(javax.faces.context.FacesContext, java.lang.String)
      */
     @Override
     public UIViewRoot restoreView(FacesContext context,
@@ -533,21 +537,21 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         if (UIDebug.debugRequest(context)) {
             context.getApplication().createComponent(UIViewRoot.COMPONENT_TYPE);
         }
-                        
+
         UIViewRoot viewRoot;
-        
+
         /*
          * Check if we are stateless.
          */
         ViewHandler outerViewHandler = context.getApplication().getViewHandler();
         String renderKitId = outerViewHandler.calculateRenderKitId(context);
         ResponseStateManager rsm = RenderKitUtils.getResponseStateManager(context, renderKitId);
-                
+
         if (rsm.isStateless(context, viewId))  {
             try {
                 context.setProcessingEvents(true);
                 ViewDeclarationLanguage vdl = vdlFactory.getViewDeclarationLanguage(viewId);
-                viewRoot = vdl.createView(context, viewId);                
+                viewRoot = vdl.createView(context, viewId);
                 context.setViewRoot(viewRoot);
                 vdl.buildView(context, viewRoot);
                 if (!viewRoot.isTransient()) {
@@ -558,7 +562,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
                 throw new FacesException(ioe);
             }
         }
-        
+
         if (StateContext.getStateContext(context).isPartialStateSaving(context, viewId)) {
             try {
                 context.setProcessingEvents(false);
@@ -589,14 +593,14 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         }
 
         UIViewRoot root = super.restoreView(context, viewId);
-        
+
         ViewHandler viewHandler = context.getApplication().getViewHandler();
         ViewDeclarationLanguage vdl = viewHandler.getViewDeclarationLanguage(context, viewId);
-        context.setResourceLibraryContracts(vdl.calculateResourceLibraryContracts(context, viewId));       
-        
+        context.setResourceLibraryContracts(vdl.calculateResourceLibraryContracts(context, viewId));
+
         StateContext stateCtx = StateContext.getStateContext(context);
         stateCtx.startTrackViewModifications(context, root);
-        
+
         return root;
     }
 
@@ -619,15 +623,15 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         if (handlers == null || handlers.isEmpty()) {
             return;
         }
-        
-        BeanInfo componentBeanInfo = (BeanInfo) 
+
+        BeanInfo componentBeanInfo = (BeanInfo)
                 topLevelComponent.getAttributes().get(UIComponent.BEANINFO_KEY);
         // PENDING(edburns): log error message if componentBeanInfo is null;
         if (null == componentBeanInfo) {
             return;
         }
         BeanDescriptor componentDescriptor = componentBeanInfo.getBeanDescriptor();
-        // There is an entry in targetList for each attached object in the 
+        // There is an entry in targetList for each attached object in the
         // <composite:interface> section of the composite component.
         List<AttachedObjectTarget> targetList = (List<AttachedObjectTarget>)
                 componentDescriptor.getValue(AttachedObjectTarget.ATTACHED_OBJECT_TARGETS_KEY);
@@ -676,7 +680,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
                         }
                         break;
                     }
-                } else if(curHandler instanceof BehaviorHolderAttachedObjectHandler && 
+                } else if(curHandler instanceof BehaviorHolderAttachedObjectHandler &&
                         curTarget instanceof BehaviorHolderAttachedObjectTarget) {
                     BehaviorHolderAttachedObjectHandler behaviorHandler = (BehaviorHolderAttachedObjectHandler) curHandler;
                     BehaviorHolderAttachedObjectTarget behaviorTarget = (BehaviorHolderAttachedObjectTarget) curTarget;
@@ -703,7 +707,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         Util.notNull("context", context);
         Util.notNull("topLevelComponent", topLevelComponent);
 
-        BeanInfo componentBeanInfo = (BeanInfo) 
+        BeanInfo componentBeanInfo = (BeanInfo)
                 topLevelComponent.getAttributes().get(UIComponent.BEANINFO_KEY);
         // PENDING(edburns): log error message if componentBeanInfo is null;
         if (null == componentBeanInfo) {
@@ -826,9 +830,9 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         ViewDeclarationLanguage vdl = viewHandler.getViewDeclarationLanguage(ctx, viewId);
 
         ctx.setResourceLibraryContracts(vdl.calculateResourceLibraryContracts(ctx, viewId));
-        
+
         return result;
-        
+
     }
 
     @Override
@@ -837,13 +841,13 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         Util.notNull("taglibURI", taglibURI);
         Util.notNull("tagName", tagName);
         UIComponent result = null;
-        
+
         DefaultFaceletFactory ff = associate.getFaceletFactory();
         result = ff._createComponent(context, taglibURI, tagName, attributes);
-                
+
         return result;
     }
-    
+
     @Override
     public List<String> calculateResourceLibraryContracts(FacesContext context, String viewId) {
         List<String> result = null;
@@ -851,11 +855,11 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         if (null == contractMappings) {
             return Collections.emptyList();
         }
-        
+
         String longestMatch = null;
         for (Map.Entry<String, List<String>> mappings : contractMappings.entrySet()) {
             String urlPattern = mappings.getKey();
-            if (urlPattern.endsWith("*")) { 
+            if (urlPattern.endsWith("*")) {
                 String prefix = urlPattern.substring(0, urlPattern.length() - 1);
                 if (viewId.startsWith(prefix)) {
                     if (longestPattern == null) {
@@ -871,18 +875,18 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
                 break;
             }
         }
-        
+
         if (longestPattern != null) {
             result = contractMappings.get(longestPattern);
         }
-        
+
         if (result == null) {
             result = contractMappings.get("*");
         }
-        
+
         return result;
     }
-    
+
 
     // --------------------------------------- Methods from ViewHandlingStrategy
 
@@ -898,7 +902,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
     @Override
     public boolean handlesViewId(String viewId) {
          if (viewId != null) {
-             
+
              if (viewId.endsWith(RIConstants.FLOW_DEFINITION_ID_SUFFIX)) {
                  return true;
              }
@@ -936,7 +940,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         for ( String suffix :defaultsuffixes ) {
             if (viewId.endsWith(suffix)) {
                 return true;
-            }                      
+            }
         }
         return false;
     }
@@ -970,7 +974,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         if (Util.isViewPopulated(ctx, view)) {
             Facelet f = faceletFactory.getFacelet(ctx, view.getViewId());
             // Disable events from being intercepted by the StateContext by
-            // virute of re-applying the handlers. 
+            // virute of re-applying the handlers.
             try {
                 stateCtx.setTrackViewModifications(false);
                 f.apply(ctx, view);
@@ -1004,7 +1008,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
             ctx.getAttributes().put(IS_BUILDING_INITIAL_STATE, Boolean.TRUE);
             stateCtx.setTrackViewModifications(false);
             f.apply(ctx, view);
-            
+
             if (f instanceof XMLFrontMatterSaver) {
                 XMLFrontMatterSaver frontMatterSaver = (XMLFrontMatterSaver) f;
                 String DOCTYPE = frontMatterSaver.getSavedDoctype();
@@ -1016,11 +1020,11 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
                     Util.saveXMLDECLToFacesContextAttributes(XMLDECL);
                 }
             }
-            
+
             if (!stateCtx.isPartialStateSaving(ctx, view.getViewId())) {
                 reapplyDynamicActions(ctx);
             }
-            
+
             doPostBuildActions(ctx, view);
         } finally {
             ctx.getAttributes().remove(IS_BUILDING_INITIAL_STATE);
@@ -1030,13 +1034,13 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
                                           UIViewRoot.class,
                                           view);
         markInitialState(ctx, view);
-        
+
         Util.setViewPopulated(ctx, view);
 
     }
 
     @Override
-    public boolean viewExists(FacesContext context, 
+    public boolean viewExists(FacesContext context,
                               String viewId) {
         boolean result = false;
         if (handlesViewId(viewId)) {
@@ -1046,11 +1050,11 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
             }
             result = null != faceletFactory.getResourceResolver().resolveUrl(viewId);
         }
-           
+
         return result;
         }
 
-    @Override 
+    @Override
     public String getId() {
         return FACELETS_VIEW_DECLARATION_LANGUAGE_ID;
     }
@@ -1098,8 +1102,8 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext extContext = context.getExternalContext();
         Map<String, Object> appMap = extContext.getApplicationMap();
-        Map<String, List<String>> contractDataStructure = 
-                (Map<String, List<String>>) 
+        Map<String, List<String>> contractDataStructure =
+                (Map<String, List<String>>)
                 appMap.remove(RESOURCE_LIBRARY_CONTRACT_DATA_STRUCTURE_KEY);
         if (null != contractDataStructure && !contractDataStructure.isEmpty()) {
             contractMappings = new ConcurrentHashMap<String, List<String>>();
@@ -1114,7 +1118,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
             if (null != stateManager) {
                 isTrinidadStateManager = stateManager.getClass().getName().contains("trinidad");
             }
-        }        
+        }
     }
 
 
@@ -1148,7 +1152,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
 
             extensionsArray = new String[extensionsList.size()];
             extensionsList.toArray(extensionsArray);
-            
+
             prefixesArray = new String[prefixesList.size()];
             prefixesList.toArray(prefixesArray);
         }
@@ -1377,7 +1381,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
 
     }
 
-     
+
     private void doPostBuildActions(FacesContext ctx, UIViewRoot root) {
         StateContext stateCtx = StateContext.getStateContext(ctx);
 //        if (stateCtx.isPartialStateSaving(ctx, root.getViewId())) {
@@ -1400,7 +1404,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
              }
          }
      }
-     
+
      private void markInitialState(final UIComponent component)
      {
          component.markInitialState();
@@ -1410,7 +1414,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
                  markInitialState(child);
              }
          }
-     }    
+     }
 
 
     private void retargetHandler(FacesContext context,
@@ -2067,48 +2071,6 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
     } // END NullWriter
 
     /**
-     * Find the given component in the component tree.
-     *
-     * @param context the Faces context.
-     * @param clientId the client id of the component to find.
-     */
-    private UIComponent locateComponentByClientId(final FacesContext context, final UIComponent parent, final String clientId) {
-        final List<UIComponent> found = new ArrayList<UIComponent>();
-        UIComponent result = null;
-
-        parent.invokeOnComponent(context, clientId, new ContextCallback() {
-
-            public void invokeContextCallback(FacesContext context, UIComponent target) {
-                found.add(target);
-            }
-        });
-
-        /*
-         * Since we did not find it the cheaper way we need to assume there is a
-         * UINamingContainer that does not prepend its ID. So we are going to
-         * walk the tree to find it.
-         */
-        if (found.isEmpty()) {
-            VisitContext visitContext = VisitContext.createVisitContext(context);
-            parent.visitTree(visitContext, new VisitCallback() {
-
-                public VisitResult visit(VisitContext visitContext, UIComponent component) {
-                    VisitResult result = VisitResult.ACCEPT;
-                    if (component.getClientId(visitContext.getFacesContext()).equals(clientId)) {
-                        found.add(component);
-                        result = VisitResult.COMPLETE;
-                        }
-                    return result;
-                }
-            });
-        }
-        if (!found.isEmpty()) {
-            result = found.get(0);
-        }
-        return result;
-    }
-
-    /**
      * Reapply the dynamic actions after Facelets reapply.
      *
      * <p> Note a precondition to this method is that tracking view
@@ -2121,13 +2083,32 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
     private void reapplyDynamicActions(FacesContext context) {
         StateContext stateContext = StateContext.getStateContext(context);
         List<ComponentStruct> actions = stateContext.getDynamicActions();
+
+        final Map<String, UIComponent> compCache = new HashMap<>();
+        try {
+            context.getAttributes().put(SKIP_ITERATION_HINT, true);
+            Set<VisitHint> hints = EnumSet.of(VisitHint.SKIP_ITERATION);
+            VisitContext visitContext = VisitContext.createVisitContext(context, null, hints);
+            context.getViewRoot().visitTree(visitContext, new VisitCallback() {
+
+                @Override
+                public VisitResult visit(VisitContext visitContext, UIComponent component) {
+                    compCache.put(component.getClientId(visitContext.getFacesContext()), component);
+
+                    return VisitResult.ACCEPT;
+                }
+            });
+        } finally {
+            context.getAttributes().remove(SKIP_ITERATION_HINT);
+        }
+
         if (actions != null) {
             for (ComponentStruct action : actions) {
                 if (ComponentStruct.REMOVE.equals(action.action)) {
-                    reapplyDynamicRemove(context, action);
+                    reapplyDynamicRemove(context, action, compCache);
                 }
                 if (ComponentStruct.ADD.equals(action.action)) {
-                    reapplyDynamicAdd(context, action);
+                    reapplyDynamicAdd(context, action, compCache);
                 }
             }
         }
@@ -2136,15 +2117,15 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
     /**
      * Reapply the dynamic add after Facelets reapply.
      *
-     * @param context the Faces context. 
+     * @param context the Faces context.
      * @param struct the component struct.
      */
-    private void reapplyDynamicAdd(FacesContext context, ComponentStruct struct) {
-        UIComponent parent = locateComponentByClientId(context, context.getViewRoot(), struct.parentClientId);
+    private void reapplyDynamicAdd(FacesContext context, ComponentStruct struct, Map<String, UIComponent> compCache) {
+        UIComponent parent = compCache.get(struct.parentClientId);
 
         if (parent != null) {
-            
-            UIComponent child = locateComponentByClientId(context, parent, struct.clientId);
+
+            UIComponent child = compCache.get(struct.clientId);
             StateContext stateContext = StateContext.getStateContext(context);
 
             if (child == null) {
@@ -2171,6 +2152,7 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
                     child.getAttributes().put(DYNAMIC_COMPONENT, child.getParent().getChildren().indexOf(child));
                 }
                 stateContext.getDynamicComponents().put(struct.clientId, child);
+                compCache.put(struct.clientId, child);
             }
         }
     }
@@ -2181,13 +2163,14 @@ public class FaceletViewHandlingStrategy extends ViewHandlingStrategy {
      * @param context the Faces context.
      * @param struct the component struct.
      */
-    private void reapplyDynamicRemove(FacesContext context, ComponentStruct struct) {
-        UIComponent child = locateComponentByClientId(context, context.getViewRoot(), struct.clientId);
+    private void reapplyDynamicRemove(FacesContext context, ComponentStruct struct, Map<String, UIComponent> compCache) {
+        UIComponent child = compCache.get(struct.clientId);
         if (child != null) {
             StateContext stateContext = StateContext.getStateContext(context);
             stateContext.getDynamicComponents().put(struct.clientId, child);
             UIComponent parent = child.getParent();
             parent.getChildren().remove(child);
+            compCache.remove(struct.clientId);
         }
     }
 }
