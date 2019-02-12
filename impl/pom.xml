@@ -32,7 +32,7 @@
     <parent>
         <groupId>com.sun.faces</groupId>
         <artifactId>jsf-project</artifactId>
-        <version>2.3.9.SP01</version>
+        <version>2.3.9.SP02-SNAPSHOT</version>
     </parent>
 
     <groupId>com.sun.faces</groupId>
@@ -46,7 +46,7 @@
         <connection>scm:git:git@github.com:jboss/mojarra.git</connection>
         <developerConnection>scm:git:git@github.com:jboss/mojarra.git</developerConnection>
         <url>https://github.com/jboss/mojarra.git</url>
-      <tag>2.3.9.SP01</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <properties>
@@ -75,7 +75,7 @@
                             <target>
                                 <property name="jsf-tools-dir" value="${project.build.directory}/../../jsf-tools" />
                                 
-                                 <echo message="${line.separator}${line.separator}${line.separator}${line.separator} * * * G E N E R A T E   S O U R C E S${line.separator}${line.separator}${line.separator}${line.separator}" />
+                                 <echo message="${line.separator}${line.separator}${line.separator}${line.separator} * * * G E N E R A T E S O U R C E S${line.separator}${line.separator}${line.separator}${line.separator}" />
                                 
                                 <!--
                                 
@@ -304,7 +304,7 @@
                             <target>
                                 <property name="jsf-tools-dir" value="${project.build.directory}/../../jsf-tools" />
                                 
-                                 <echo message="${line.separator}${line.separator}${line.separator}${line.separator} * * * G E N E R A T E   R E S O U R C E S${line.separator}${line.separator}${line.separator}${line.separator}" />
+                                 <echo message="${line.separator}${line.separator}${line.separator}${line.separator} * * * G E N E R A T E R E S O U R C E S${line.separator}${line.separator}${line.separator}${line.separator}" />
                                 
                                 
                                 <!--
@@ -408,8 +408,7 @@
                                 <replace file="${project.build.directory}/generated-resources/antrun/com/sun/faces/jsf-ri-runtime.xml">
                                     <replacetoken><![CDATA[<faces-config>]]></replacetoken>
                                     <replacevalue><![CDATA[
-<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
     version="2.3">]]>
                                     </replacevalue>
                                 </replace>
