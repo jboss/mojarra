@@ -75,6 +75,7 @@ public class AnnotationProviderFactory {
                     }
                 }
             }
+
             if (provider != null) {
                 if (!(provider instanceof AnnotationProvider)) {
                     throw new FacesException("Class " + provider.getClass().getName() + " is not an instance of com.sun.faces.spi.AnnotationProvider");
