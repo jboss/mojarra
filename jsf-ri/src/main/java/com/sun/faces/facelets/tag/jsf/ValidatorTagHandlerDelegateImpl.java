@@ -40,6 +40,7 @@
 
 package com.sun.faces.facelets.tag.jsf;
 
+import com.sun.faces.cdi.CdiValidator;
 import com.sun.faces.component.validator.ComponentValidators;
 import com.sun.faces.facelets.tag.MetaRulesetImpl;
 import com.sun.faces.util.Util;
@@ -145,7 +146,7 @@ public class ValidatorTagHandlerDelegateImpl extends TagHandlerDelegate implemen
         boolean found = false;
         
         for (Validator validator : validators) {
-            if (validator.getClass().equals(v.getClass())) {
+            if (validator.getClass().equals(v.getClass()) && !(v instanceof CdiValidator)) {
                 found = true;
                 break;
             }
