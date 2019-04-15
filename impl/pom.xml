@@ -846,8 +846,8 @@
 
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.el-impl</artifactId>
-            <version>3.0.1-b08-jbossorg-1</version>
+            <artifactId>jakarta.el</artifactId>
+            <version>3.0.2</version>
             <scope>provided</scope>
         </dependency>
     
