@@ -45,6 +45,12 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ServiceLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.faces.FacesException;
+
+import com.sun.faces.util.FacesLogger;
 
 /**
  * Factory class for creating <code>ConfigurationResourceProvider</code> instances
@@ -52,6 +58,7 @@ import java.util.ServiceLoader;
  */
 public class ConfigurationResourceProviderFactory {
 
+    private static final Logger LOGGER = FacesLogger.APPLICATION.getLogger();
 
     public enum ProviderType {
 
@@ -108,6 +115,10 @@ public class ConfigurationResourceProviderFactory {
                     }
                 } catch(ClassCastException cce) {
                     // we are going to ignore these for now.
+                } catch (FacesException e) {
+                    if (LOGGER.isLoggable(Level.FINE)) {
+                        LOGGER.log(Level.FINE, e.toString(), e);
+                    }
                 }
             }
         } else {
