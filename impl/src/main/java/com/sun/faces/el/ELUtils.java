@@ -307,7 +307,8 @@ public class ELUtils {
         
         if (getStreamELResolverMethod != null) {
             try {
-                ELResolver streamELResolver = (ELResolver) getStreamELResolverMethod.invoke(expressionFactory, (Object[]) null);
+                ELResolver streamELResolver = (ELResolver) getStreamELResolverMethod.invoke(
+                    expressionFactory, (Object[]) null);
                 if (streamELResolver != null) {
                     composite.addRootELResolver(streamELResolver);
 
