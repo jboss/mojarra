@@ -478,6 +478,24 @@ public class Util {
         return valueExpression;
     }
     
+    /**
+     * Returns <code>true</code> if the given object equals one of the given objects.
+     * @param <T> The generic object type.
+     * @param object The object to be checked if it equals one of the given objects.
+     * @param objects The argument list of objects to be tested for equality.
+     * @return <code>true</code> if the given object equals one of the given objects.
+     */
+    @SafeVarargs
+    public static <T> boolean isOneOf(T object, T... objects) {
+        for (Object other : objects) {
+            if (object == null ? other == null : object.equals(other)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     public static <T> List<T> reverse(List<T> list) {
         int length = list.size();
         List<T> result = new ArrayList<>(length);
