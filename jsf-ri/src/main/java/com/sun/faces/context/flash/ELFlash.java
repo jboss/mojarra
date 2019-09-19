@@ -1108,6 +1108,13 @@ public class ELFlash extends Flash {
             }
             contextMap.put(CONSTANTS.DidWriteCookieAttributeName, Boolean.TRUE);
         } else {
+            // if the cookie is removed, make sure the empty maps are removed from innerMap 
+            if (nextFlash != null) {
+                flashManager.expireNext();
+            }
+            if (prevFlash != null) {
+                flashManager.expirePrevious();
+            }
             removeCookie(extContext, toSet);
         }
     }
@@ -1361,6 +1368,29 @@ public class ELFlash extends Flash {
             }
         }
 
+        void expireNext() {
+            // expire next
+            if (null != nextRequestFlashInfo) {
+                Map<String, Object> flashMap;
+                // clear the old map
+                if (null != (flashMap = nextRequestFlashInfo.getFlashMap())) {
+                    if (LOGGER.isLoggable(Level.FINEST)) {
+                        LOGGER.log(Level.FINEST, "{0} expire next[{1}]",
+                                new Object[]{getLogPrefix(FacesContext.getCurrentInstance()),
+                                    nextRequestFlashInfo.getSequenceNumber()});
+
+                    }
+                    FacesContext context = FacesContext.getCurrentInstance();
+                    context.getApplication().publishEvent(context, PreClearFlashEvent.class, 
+                            flashMap);
+                    flashMap.clear();
+                }
+                // remove it from the flash
+                innerMap.remove(nextRequestFlashInfo.getSequenceNumber() + "");
+                nextRequestFlashInfo = null;
+            }
+        }
+
         void expireNext_MovePreviousToNext() {
             if (null != nextRequestFlashInfo) {
                 if (LOGGER.isLoggable(Level.FINEST)) {
@@ -1437,7 +1467,7 @@ public class ELFlash extends Flash {
                     // Don't make the flash older on debug requests
                     if (!UIDebug.debugRequest(context)) {
                         previousRequestFlashInfo.setLifetimeMarker(LifetimeMarker.SecondTimeThru);
-                        nextRequestFlashInfo = null;
+                        expireNext();
                     }
                 }
                 Map<String, Object> flashMap;
