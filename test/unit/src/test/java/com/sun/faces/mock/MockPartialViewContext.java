@@ -53,6 +53,8 @@ import javax.faces.event.PhaseId;
 public class MockPartialViewContext extends PartialViewContext {
 
     private Map<Object, Object> attributes;
+    private boolean partial = false;
+    private boolean renderAll = false;
 
     // ------------------------------------------------------------ Constructors
     public MockPartialViewContext() {
@@ -102,7 +104,7 @@ public class MockPartialViewContext extends PartialViewContext {
     }
 
     public boolean isPartialRequest() {
-        return false;
+        return partial;
     }
 
     public boolean isExecuteNone() {
@@ -114,11 +116,11 @@ public class MockPartialViewContext extends PartialViewContext {
     }
 
     public boolean isRenderAll() {
-        throw new UnsupportedOperationException();
+        return renderAll;
     }
 
     public void setRenderAll(boolean renderAll) {
-        throw new UnsupportedOperationException();
+        this.renderAll = renderAll;
     }
 
     public boolean isRenderNone() {
@@ -138,7 +140,8 @@ public class MockPartialViewContext extends PartialViewContext {
     }
 
     @Override
-    public void setPartialRequest(boolean arg0) {
+    public void setPartialRequest(boolean partial) {
+        this.partial = partial;
     }
 
 }
