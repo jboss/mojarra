@@ -41,6 +41,8 @@
 package com.sun.faces.test.javaee7.cdiinitdestroyevent;
 
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -49,10 +51,25 @@ import javax.inject.Named;
 public class ViewScopedBean implements Serializable {
     
     private static final long serialVersionUID = -6301337067401894253L;
+    private static int counter = 0;
     
     private String value = "My View Scoped Value";
 
     public String getValue() {
         return value;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    @PostConstruct
+    public void postConstruct() {
+        counter++;
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        counter--;
     }
 }
