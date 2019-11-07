@@ -179,28 +179,45 @@ public final class FactoryFinder {
 
     // ------------------------------------------------------- Static Variables
 
-    private static final FactoryManagerCache FACTORIES_CACHE =
-          new FactoryManagerCache();
+    private static final FactoryManagerCache FACTORIES_CACHE;
 
 
     /**
      * <p>The set of JavaServer Faces factory classes for which the factory
      * discovery mechanism is supported.</p>
      */
-    private static final String[] FACTORY_NAMES = {
-         APPLICATION_FACTORY,
-         FACES_CONTEXT_FACTORY,
-         LIFECYCLE_FACTORY,
-         RENDER_KIT_FACTORY
-    };
+    private static final String[] FACTORY_NAMES;
 
     /**
      * <p>Map of Class instances for the our factory names.</p>
      */
-    private static Map<String, Class> factoryClasses = null;
+    private static Map<String, Class> factoryClasses;
 
-    private static final Logger LOGGER =
-         Logger.getLogger("javax.faces", "javax.faces.LogStrings");
+    private static final Logger LOGGER;
+
+    static {
+
+        FACTORIES_CACHE = new FactoryManagerCache();
+
+        FACTORY_NAMES = new String [] {
+                APPLICATION_FACTORY,
+                FACES_CONTEXT_FACTORY,
+                LIFECYCLE_FACTORY,
+                RENDER_KIT_FACTORY
+        };
+
+        factoryClasses = new HashMap<String, Class>(FACTORY_NAMES.length);
+        factoryClasses.put(APPLICATION_FACTORY,
+                javax.faces.application.ApplicationFactory.class);
+        factoryClasses.put(FACES_CONTEXT_FACTORY,
+                javax.faces.context.FacesContextFactory.class);
+        factoryClasses.put(LIFECYCLE_FACTORY,
+                javax.faces.lifecycle.LifecycleFactory.class);
+        factoryClasses.put(RENDER_KIT_FACTORY,
+                javax.faces.render.RenderKitFactory.class);
+
+        LOGGER = Logger.getLogger("javax.faces", "javax.faces.LogStrings");
+    }
 
     // --------------------------------------------------------- Public Methods
 
@@ -549,20 +566,7 @@ public final class FactoryFinder {
      *         factory.
      */
     private static Class getFactoryClass(String factoryClassName) {
-
-        if (null == factoryClasses) {
-            factoryClasses = new HashMap<String, Class>(FACTORY_NAMES.length);
-            factoryClasses.put(APPLICATION_FACTORY,
-                 javax.faces.application.ApplicationFactory.class);
-            factoryClasses.put(FACES_CONTEXT_FACTORY,
-                 javax.faces.context.FacesContextFactory.class);
-            factoryClasses.put(LIFECYCLE_FACTORY,
-                 javax.faces.lifecycle.LifecycleFactory.class);
-            factoryClasses.put(RENDER_KIT_FACTORY,
-                 javax.faces.render.RenderKitFactory.class);
-        }
         return factoryClasses.get(factoryClassName);
-
     }
 
 
