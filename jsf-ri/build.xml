@@ -275,7 +275,7 @@
         <!-- Massage the version number into LogStrings.properties -->
         <replace dir="${build.classes.dir}/com/sun/faces/"
                  token="|version.string|"
-                 value="1.2.15.b01.SP2 ${build.number}">
+                 value="1.2.15.b01.SP3 ${build.number}">
             <include name="LogStrings*.properties"/>
         </replace>
 
