@@ -34,6 +34,8 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import com.sun.faces.RIConstants;
+import com.sun.faces.config.WebConfiguration;
+import static com.sun.faces.config.WebConfiguration.BooleanWebContextInitParameter.UseFaceletsID;
 import com.sun.faces.context.FacesFileNotFoundException;
 import com.sun.faces.facelets.compiler.Compiler;
 import com.sun.faces.util.Cache;
@@ -108,11 +110,19 @@ public class DefaultFaceletFactory {
     public final void init(Compiler compiler, ResourceResolver resolver, long refreshPeriod, FaceletCache cache) {
         Util.notNull("compiler", compiler);
         Util.notNull("resolver", resolver);
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        if (facesContext == null) {
+            throw new IllegalStateException("DefaultFaceletFactory cannot locate the faces context");
+        }
+        ExternalContext externalContext = facesContext.getExternalContext();
+        WebConfiguration config = WebConfiguration.getInstance(externalContext);
+
         this.compiler = compiler;
         cachePerContract = new ConcurrentHashMap<>();
         this.resolver = resolver;
-        baseUrl = resolver.resolveUrl("/");
-        idMappers = new Cache<>(new IdMapperFactory());
+        this.baseUrl = resolver.resolveUrl("/");
+        this.idMappers = config.isOptionEnabled(UseFaceletsID)? null : new Cache<>(new IdMapperFactory());
         // this.location = url;
         refreshPeriod = refreshPeriod >= 0 ? refreshPeriod * 1000 : -1;
         this.refreshPeriod = refreshPeriod;

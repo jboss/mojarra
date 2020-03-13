@@ -936,6 +936,10 @@ public class WebConfiguration {
         AllowTextChildren("com.sun.faces.allowTextChildren", false),
         CacheResourceModificationTimestamp("com.sun.faces.cacheResourceModificationTimestamp", false),
         EnableAgressiveSessionDirtying("com.sun.faces.enableAgressiveSessionDirtying", false), EnableDistributable("com.sun.faces.enableDistributable", false),
+        UseFaceletsID(
+              "com.sun.faces.useFaceletsID",
+              false
+        ),
         EnableFaceletsResourceResolverResolveCompositeComponents("com.sun.faces.enableFaceletsResourceResolverCompositeComponents", false),
         EnableMissingResourceLibraryDetection("com.sun.faces.enableMissingResourceLibraryDetection", false),
         DisableIdUniquenessCheck("com.sun.faces.disableIdUniquenessCheck", false),

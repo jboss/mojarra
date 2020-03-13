@@ -85,9 +85,9 @@ final class DefaultFacelet extends Facelet implements XMLFrontMatterSaver {
         this.src = src;
         this.root = root;
         this.alias = alias;
-        mapper = factory.idMappers.get(alias);
-        createTime = System.currentTimeMillis();
-        refreshPeriod = this.factory.getRefreshPeriod();
+        this.mapper = factory.idMappers != null? factory.idMappers.get(alias) : null;
+        this.createTime = System.currentTimeMillis();
+        this.refreshPeriod = this.factory.getRefreshPeriod();
 
         String DOCTYPE = Util.getDOCTYPEFromFacesContextAttributes(FacesContext.getCurrentInstance());
         if (null != DOCTYPE) {
@@ -111,8 +111,8 @@ final class DefaultFacelet extends Facelet implements XMLFrontMatterSaver {
 
         IdMapper idMapper = IdMapper.getMapper(facesContext);
         boolean mapperSet = false;
-        if (idMapper == null) {
-            IdMapper.setMapper(facesContext, mapper);
+        if (idMapper == null && this.mapper != null) {
+            IdMapper.setMapper(facesContext, this.mapper);
             mapperSet = true;
         }
 
