@@ -58,6 +58,7 @@
     
     <modules>
         <module>facelets</module>
+        <module>faceletsID</module>
         <module>faceletsEmptyAsNull</module>
         <module>resourcehandler</module>
         <module>viewhandler</module>
