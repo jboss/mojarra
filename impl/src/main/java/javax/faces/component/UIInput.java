@@ -1026,7 +1026,7 @@ public class UIInput extends UIOutput implements EditableValueHolder {
             }
         }
 
-        if (isValid() && compareValues(previous, newValue)) {
+        if (compareValues(previous, newValue)) {
             queueEvent(new ValueChangeEvent(context, this, previous, newValue));
         }
 
