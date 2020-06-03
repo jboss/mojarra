@@ -1384,7 +1384,7 @@ public class ELFlash extends Flash {
                 flashMap.clear();
                 // remove it from the flash
                 innerMap.remove(nextRequestFlashInfo.getSequenceNumber() + "");
-                expireNext();
+                nextRequestFlashInfo = null;
             }
 
             nextRequestFlashInfo = previousRequestFlashInfo;
@@ -1442,7 +1442,7 @@ public class ELFlash extends Flash {
                     // Don't make the flash older on debug requests
                     if (!UIDebug.debugRequest(context)) {
                         previousRequestFlashInfo.setLifetimeMarker(LifetimeMarker.SecondTimeThru);
-                        nextRequestFlashInfo = null;
+                        expireNext();
                     }
                 }
                 Map<String, Object> flashMap;
