@@ -66,5 +66,6 @@
         <module>correctScanningWar2</module>
         <module>resource</module>
         <module>viewParamBeanValidatorNotNull</module>
+        <module>viewParamNullValueAjax</module>
   </modules>
 </project>
