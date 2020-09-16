@@ -14,6 +14,12 @@
 [//]: # " SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0 "
 -->
 
+JBoss Fork of Mojarra 2.3.x
+---------------------------
+
+Building Mojarra 2.3.x requires JDK 1.8
+
+
 # Mojarra
 
 Oracle's implementation of the Jakarta Faces specification 

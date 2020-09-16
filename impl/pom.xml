@@ -25,16 +25,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"> <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>org.glassfish</groupId>
-        <artifactId>mojarra-parent</artifactId>
-        <version>2.3.17</version>
+        <groupId>com.sun.faces</groupId>
+        <artifactId>jsf-project</artifactId>
+        <version>2.3.17.SP01-SNAPSHOT</version>
     </parent>
-    
-    <artifactId>jakarta.faces</artifactId>
+
+    <groupId>com.sun.faces</groupId>
+    <artifactId>jsf-impl</artifactId>
     <packaging>jar</packaging>
     
     <name>Mojarra ${project.version}</name>
     <description>EE4J Compatible Implementation for Jakarta Faces API</description>
+
+    <scm>
+        <connection>scm:git:git@github.com:jboss/mojarra.git</connection>
+        <developerConnection>scm:git:git@github.com:jboss/mojarra.git</developerConnection>
+        <url>https://github.com/jboss/mojarra.git</url>
+    </scm>
     
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -280,6 +287,14 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <overwrite>true</overwrite>
+                </configuration>
+            </plugin>
      
             
             <!-- Creates the OSGi MANIFEST.MF file -->
@@ -298,6 +313,14 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifest>
+                            <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
+                        </manifest>
+                    </archive>
                     <instructions>
                         <Bundle-SymbolicName>org.glassfish.jakarta.faces</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
@@ -381,15 +404,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>2.6</version>
                 <configuration>
+                    <excludes>
+                        <exclude>javax/**</exclude>
+                        <exclude>com/sun/faces/vendor/GlassFish*</exclude>
+                        <exclude>com/sun/faces/vendor/Jetty*</exclude>
+                        <exclude>com/sun/faces/vendor/Tomcat*</exclude>
+                        <exclude>META-INF/services/com.sun.faces.spi.injectionprovider</exclude>
+                        <exclude>META-INF/mojarra-jsf-api-probe-provider.xml</exclude>
+                    </excludes>
                     <archive>
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
-                    <excludes>
-                        <exclude>**/*.java</exclude>
-                        <exclude>**/*.html</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             
@@ -462,6 +489,16 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.0.1</version>
+                <configuration>
+                    <excludes>
+                        <exclude>javax/**</exclude>
+                        <exclude>com/sun/faces/vendor/GlassFish*</exclude>
+                        <exclude>com/sun/faces/vendor/Jetty*</exclude>
+                        <exclude>com/sun/faces/vendor/Tomcat*</exclude>
+                        <exclude>META-INF/services/com.sun.faces.spi.injectionprovider</exclude>
+                        <exclude>META-INF/mojarra-jsf-api-probe-provider.xml</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -478,12 +515,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>2.10.4</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
                         <configuration>
-                            <excludePackageNames>com</excludePackageNames>
+                            <excludePackageNames>javax</excludePackageNames>
                         </configuration>
                         <goals>
                             <goal>jar</goal>
