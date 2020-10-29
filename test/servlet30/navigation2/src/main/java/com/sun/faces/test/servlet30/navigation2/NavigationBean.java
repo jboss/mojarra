@@ -16,7 +16,6 @@
 
 package com.sun.faces.test.servlet30.navigation2;
 
-import com.sun.faces.application.ApplicationImpl;
 import com.sun.faces.application.NavigationHandlerImpl;
 import com.sun.faces.config.manager.DbfFactory;
 import com.sun.faces.util.Util;
@@ -154,7 +153,7 @@ public class NavigationBean {
         FacesContext fc = FacesContext.getCurrentInstance();
         Application app = fc.getApplication();
         int cnt = 0;
-        assertTrue(app instanceof ApplicationImpl);
+        assertTrue(app instanceof Application);
         ConfigurableNavigationHandler handler = (ConfigurableNavigationHandler) app.getNavigationHandler();
         Map caseListMap = handler.getNavigationCases();
         Iterator iter = caseListMap.keySet().iterator();
