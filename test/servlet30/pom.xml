@@ -132,7 +132,7 @@
         <module>navigation3</module>
         <module>nestedDataTables</module>
         <module>nestedLoadBundles</module>
-        <module>neverUnwrapExceptions</module>
+        <!--<module>neverUnwrapExceptions</module>-->
         <module>noWebXml</module>
         <module>passthrough</module>
         <module>processAsHtml5</module>
@@ -148,7 +148,7 @@
         <module>stateViewExpiredExceptionMissing</module>
         <module>stringConverter</module>
         <module>suppressXmlDeclaration</module>
-        <module>systest</module>
+        <!--<module>systest</module>-->
         <module>viewExpiredException</module>
         <module>viewRootPhaseListener</module>
         <module>viewRootPhaseListenerNoContextParam</module>
