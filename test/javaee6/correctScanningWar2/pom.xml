@@ -45,4 +45,12 @@
             </plugin>
         </plugins>
     </build> 
+    <dependencies>
+        <dependency>
+            <groupId>com.sun.faces.test.javaee6</groupId>
+            <artifactId>correctScanningJar</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
 </project>
