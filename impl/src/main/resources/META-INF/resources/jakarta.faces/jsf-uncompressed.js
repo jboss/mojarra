@@ -18,9 +18,9 @@
  */
 
 /**
- @project JSF JavaScript Library
+ @project Faces JavaScript Library
  @version 2.2
- @description This is the standard implementation of the JSF JavaScript Library.
+ @description This is the standard implementation of the Faces JavaScript Library.
  */
 
 // Detect if this is already loaded, and if loaded, if it's a higher version
@@ -2748,9 +2748,9 @@ if (!((jsf && jsf.specversion && jsf.specversion >= 23000 ) &&
              * unique within this view, but must not be included in the
              * view state.  This requirement is simply to satisfy XML
              * correctness in parity with what is done in the
-             * corresponding non-partial JSF view.  Locate and update
+             * corresponding non-partial Faces view.  Locate and update
              * the <code>jakarta.faces.ViewState</code> value for all
-             * JSF forms covered in the <code>render</code> target
+             * Faces forms covered in the <code>render</code> target
              * list whose ID starts with the same 
              * &lt;VIEW_ROOT_CONTAINER_CLIENT_ID&gt; value.</li>
 
@@ -2775,9 +2775,9 @@ if (!((jsf && jsf.specversion && jsf.specversion >= 23000 ) &&
              * unique within this view, but must not be included in the
              * view state.  This requirement is simply to satisfy XML
              * correctness in parity with what is done in the
-             * corresponding non-partial JSF view.  Locate and update
+             * corresponding non-partial Faces view.  Locate and update
              * the <code>jakarta.faces.ClientWindow</code> value for all
-             * JSF forms covered in the <code>render</code> target
+             * Faces forms covered in the <code>render</code> target
              * list whose ID starts with the same 
              * &lt;VIEW_ROOT_CONTAINER_CLIENT_ID&gt; value.</li>
 
@@ -3168,19 +3168,16 @@ if (!((jsf && jsf.specversion && jsf.specversion >= 23000 ) &&
     /**
      * <p class="changed_added_2_2">Return the windowId of the window
      * in which the argument form is rendered.</p>
-
-     * @param {optional String|DomNode} node. Determine the nature of
+     *
+     * @param {DomNode} node Determine the nature of
      * the argument.  If not present, search for the windowId within
      * <code>document.forms</code>.  If present and the value is a
      * string, assume the string is a DOM id and get the element with
      * that id and start the search from there.  If present and the
      * value is a DOM element, start the search from there.
-
      * @returns String The windowId of the current window, or null 
      *  if the windowId cannot be determined.
-
      * @throws an error if more than one unique WindowId is found.
-
      * @function jsf.getClientWindow
      */
     jsf.getClientWindow = function(node) {
@@ -3412,7 +3409,7 @@ if (!((jsf && jsf.specversion && jsf.specversion >= 23000 ) &&
          * <code>CloseEvent</code> itself. Note that this will also be invoked on errors and that you can inspect the
          * close reason code if an error occurred and which one (i.e. when the code is not 1000). See also
          * <a href="http://tools.ietf.org/html/rfc6455#section-7.4.1">RFC 6455 section 7.4.1</a> and
-         * <a href="http://docs.oracle.com/javaee/7/api/javax/websocket/CloseReason.CloseCodes.html">CloseCodes</a> API
+         * <a href="https://jakarta.ee/specifications/websocket/2.0/apidocs/jakarta/websocket/CloseReason.CloseCodes.html">CloseCodes</a> API
          * for an elaborate list.
          * @param {Object} behaviors Client behavior functions to be invoked when specific message is received.
          * @param {boolean} autoconnect Whether or not to automatically connect the socket. Defaults to <code>false</code>.

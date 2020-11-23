@@ -54,56 +54,58 @@
     <!-- ###  D E P E N D E N C I E S  ### --> 
     
     <dependencies>
-        <!-- Java EE Dependencies -->
+        <!-- Jakarta EE Dependencies -->
 
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>5.0.0-M1</version>
+            <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>    
             <groupId>jakarta.websocket</groupId>
             <artifactId>jakarta.websocket-api</artifactId>
-            <version>2.0.0-M1</version>
+            <version>2.0.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
-            <version>4.0.0-RC1</version>
+            <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
     
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>3.0.0-M1</version>
+            <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.0-M1</version>
+            <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
+        
+        
+        <!-- Optional -->
         
         <dependency>
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
             <version>1.3.2</version>
             <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
-        
-        <!-- Optional -->
         
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
-            <version>3.0.0-M1</version>
+            <version>3.0.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -111,7 +113,7 @@
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-            <version>2.0.0-RC1</version>
+            <version>2.0.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -119,7 +121,7 @@
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>
-            <version>2.0.0-RC2</version>
+            <version>2.0.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -135,7 +137,7 @@
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.0.0-RC1</version>
+            <version>3.0.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -143,7 +145,7 @@
         <dependency>
             <groupId>jakarta.xml.ws</groupId>
             <artifactId>jakarta.xml.ws-api</artifactId>
-            <version>3.0.0-RC1</version>
+            <version>3.0.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -151,7 +153,7 @@
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.0.0-RC1</version>
+            <version>2.0.0</version>
         </dependency>
         
         
@@ -214,7 +216,7 @@
                     <exclude>**/LogStrings*.properties</exclude>
                 </excludes>
             </resource>
-            <!-- Sets the Main JSF version into the log strings -->
+            <!-- Sets the Main Faces version into the log strings -->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -312,7 +314,7 @@
                     <instructions>
                         <Bundle-SymbolicName>org.glassfish.jakarta.faces</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
-                        <Bundle-Name>Mojarra JSF Implementation ${project.version}</Bundle-Name>
+                        <Bundle-Name>Mojarra Faces Implementation ${project.version}</Bundle-Name>
                         <Bundle-Description>Eclipse Faces Implementation (jakarta.faces/3.0) ${project.version}</Bundle-Description>
                         
                         <Specification-Title>Jakarta Server Faces</Specification-Title>
@@ -416,7 +418,7 @@
                     <targetJdk>1.8</targetJdk>
                     <excludes>
                         <exclude>com/sun/faces/taglib/html_basic/**/*.java</exclude>
-                        <exclude>javax/faces/component/html/**/*.java</exclude>
+                        <exclude>jakarta/faces/component/html/**/*.java</exclude>
                     </excludes>
                     <rulesets>
                         <ruleset>${project.build.directory}/../src/main/pmd/ruleset.xml</ruleset>
@@ -563,7 +565,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.9.1</version>
                 <configuration>
-                    <includes>javax/**/*.java</includes>
+                    <includes>jakarta/**/*.java</includes>
                     <configLocation>${project.build.directory}/../checkstyle-config.xml</configLocation>
                 </configuration>
                 <reportSets>
@@ -587,7 +589,7 @@
                     <targetJdk>1.8</targetJdk>
                     <excludes>
                         <exclude>com/sun/faces/taglib/html_basic/**/*.java</exclude>
-                        <exclude>javax/faces/component/html/**/*.java</exclude>
+                        <exclude>jakarta/faces/component/html/**/*.java</exclude>
                     </excludes>
                     <rulesets>
                         <ruleset>${project.build.directory}/../src/main/pmd/ruleset.xml</ruleset>
