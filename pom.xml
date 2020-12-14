@@ -28,7 +28,7 @@
 
     <groupId>com.sun.faces</groupId>
     <artifactId>jsf-project</artifactId>
-    <version>3.0.0.SP03-SNAPSHOT</version>
+    <version>3.0.0.SP03</version>
     <packaging>pom</packaging>
     
     <name>Mojarra ${project.version} - Project</name>
@@ -66,7 +66,7 @@
         <connection>scm:git:git@github.com:jboss/mojarra.git</connection>
         <developerConnection>scm:git:git@github.com:jboss/mojarra.git</developerConnection>
         <url>https://github.com/jboss/mojarra.git</url>
-        <tag>HEAD</tag>
+        <tag>3.0.0.SP03</tag>
     </scm>
     <distributionManagement>
         <repository>
