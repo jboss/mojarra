@@ -19,11 +19,16 @@ package com.sun.faces.test.javae8.el;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 
 @Named("sessionBean")
 @SessionScoped
 public class SessionBean implements Serializable {
     
+    public boolean isValidApplication(Object o) {
+        return o instanceof ServletContext;
+    }
+
     public String getText() {
         return "Coming from a session bean";
     }

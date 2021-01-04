@@ -31,7 +31,7 @@
             <title>JSP Page</title>
         </head>
         <body>
-            <h:outputText value="#{application}"/>
+            <h:outputText value="#{sessionBean.isValidApplication(application)? 'Application' : 'Error'}"/>
         </body>
     </html>
 </f:view>
