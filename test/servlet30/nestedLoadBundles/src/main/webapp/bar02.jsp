@@ -23,7 +23,7 @@
 
 <f:loadBundle var="bundle" basename="com.sun.faces.test.servlet30.nestedloadbundles.BundleE" />
 
-<p>Output 06 from bundle: <h:outputText id="output06" value="#{bundle.okLabel}" /></p>
+<f:verbatim>Output 06 from bundle: </f:verbatim><h:outputText id="output06" value="#{bundle.okLabel}" /><f:verbatim><br/></f:verbatim>
 
 
 <h:outputText value="bar02"/>
