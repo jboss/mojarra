@@ -127,7 +127,7 @@ public class CDIUtilImpl implements Serializable, CDIUtil {
             return false;
         }
 
-        @Override
+        // TODO to be removed once using CDI API 4.x
         public boolean isNullable() {
             return false;
         }
