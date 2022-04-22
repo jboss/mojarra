@@ -16,6 +16,8 @@
 
 # Mojarra 4.0 WIP
 
+JBoss Fork of Mojarra 4.0.0
+
 Eclipse's implementation of the upcoming Jakarta Faces 4.0 specification
 
 For Mojarra / JSF 2.3 please have a look at https://github.com/eclipse-ee4j/mojarra/blob/2.3/README.md.  
@@ -83,7 +85,7 @@ In case of WildFly/JBoss EAP, [you need to manually package `jsf-api.jar` and `j
 
     ```xml
     <dependency>
-        <groupId>org.glassfish</groupId>
+        <groupId>${project.groupId}</groupId>
         <artifactId>jakarta.faces</artifactId>
         <version><!-- Use latest 4.0.x version. --></version>
     </dependency>
