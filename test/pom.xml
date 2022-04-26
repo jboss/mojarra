@@ -24,7 +24,7 @@
 
     <groupId>com.sun.faces.test</groupId>
     <artifactId>pom</artifactId>
-    <version>3.0.2-SNAPSHOT</version>
+    <version>3.0.2.SP01</version>
     <packaging>pom</packaging>
 
     <name>Mojarra ${project.version} - Test</name>
@@ -90,7 +90,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>3.0.2.SP01</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -193,7 +193,7 @@
         <dependency>
             <groupId>com.sun.faces</groupId>
             <artifactId>util</artifactId>
-            <version>3.0.2-SNAPSHOT</version>
+            <version>3.0.2.SP01</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

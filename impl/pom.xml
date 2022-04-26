@@ -23,17 +23,16 @@
 
  -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"> <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
-        <groupId>org.eclipse.ee4j</groupId>
-        <artifactId>project</artifactId>
-        <version>1.0.6</version>
-        <relativePath/>
+        <groupId>com.sun.faces</groupId>
+        <artifactId>jsf-project</artifactId>
+        <version>3.0.2.SP01</version>
     </parent>
-    
-    <groupId>org.glassfish</groupId>
-    <artifactId>jakarta.faces</artifactId>
-    <version>3.0.2</version>
+
+    <groupId>com.sun.faces</groupId>
+    <artifactId>jsf-impl</artifactId>
+    <version>3.0.2.SP01</version>
     
     <packaging>jar</packaging>
     
