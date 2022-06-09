@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -256,10 +257,8 @@ public class UISelectMany extends UIInput {
      * </p>
      */
     public UISelectMany() {
-
         super();
         setRendererType("jakarta.faces.Listbox");
-
     }
 
     // -------------------------------------------------------------- Properties
@@ -267,6 +266,22 @@ public class UISelectMany extends UIInput {
     @Override
     public String getFamily() {
         return COMPONENT_FAMILY;
+    }
+
+    private transient Object submittedValue = null;
+
+    @Override
+    public Object getSubmittedValue() {
+        if (submittedValue == null && !isValid() && considerEmptyStringNull(FacesContext.getCurrentInstance())) { // JAVASERVERFACES_SPEC_PUBLIC-671
+            return new String[0]; // Mojarra#5081
+        }
+
+        return submittedValue;
+    }
+
+    @Override
+    public void setSubmittedValue(Object submittedValue) {
+        this.submittedValue = submittedValue;
     }
 
     /**
