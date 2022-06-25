@@ -17,6 +17,7 @@
 package com.sun.faces.application.resource;
 
 import static com.sun.faces.config.WebConfiguration.BooleanWebContextInitParameter.CacheResourceModificationTimestamp;
+import static com.sun.faces.util.Util.ensureLeadingSlash;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,7 +62,7 @@ public class WebappResourceHelper extends ResourceHelper {
 
         WebConfiguration webconfig = WebConfiguration.getInstance();
         cacheTimestamp = webconfig.isOptionEnabled(CacheResourceModificationTimestamp);
-        BASE_RESOURCE_PATH = webconfig.getOptionValue(WebConfiguration.WebContextInitParameter.WebAppResourcesDirectory);
+        BASE_RESOURCE_PATH = ensureLeadingSlash(webconfig.getOptionValue(WebConfiguration.WebContextInitParameter.WebAppResourcesDirectory));
         BASE_CONTRACTS_PATH = webconfig.getOptionValue(WebConfiguration.WebContextInitParameter.WebAppContractsDirectory);
 
     }
