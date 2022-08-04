@@ -28,7 +28,7 @@
 
     <groupId>com.sun.faces</groupId>
     <artifactId>jsf-project</artifactId>
-    <version>2.3.14.SP05-SNAPSHOT</version>
+    <version>2.3.14.SP06</version>
     <packaging>pom</packaging>
 
     <name>JSF Parent</name>
@@ -63,7 +63,7 @@
         <connection>scm:git:git@github.com:jboss/mojarra.git</connection>
         <developerConnection>scm:git:git@github.com:jboss/mojarra.git</developerConnection>
         <url>https://github.com/jboss/mojarra.git</url>
-        <tag>HEAD</tag>
+        <tag>2.3.14.SP06</tag>
     </scm>
     <distributionManagement>
         <repository>
