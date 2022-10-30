@@ -297,4 +297,24 @@ public class WebappResourceHelper extends ResourceHelper {
         return basePath;
     }
 
+    private List<String> getLocalizedProperties(String path, FacesContext ctx) {
+    	Locale loc = (ctx != null && ctx.getViewRoot() != null) ? ctx.getViewRoot().getLocale() : null;
+    	if (!path.endsWith(".properties") || loc == null) {
+    		return Collections.singletonList(path);
+    	}
+    	List<String> list = new ArrayList<>();
+    	String base = path.substring(0, path.lastIndexOf(".properties"));
+    	if (!loc.getVariant().isEmpty()) {
+    		list.add(String.format("%s_%s_%s_%s.properties", base, loc.getLanguage(), loc.getCountry(), loc.getVariant()));
+    	}
+    	if (!loc.getCountry().isEmpty()) {
+    		list.add(String.format("%s_%s_%s.properties", base, loc.getLanguage(), loc.getCountry()));
+    	}
+    	if (!loc.getLanguage().isEmpty()) {
+    		list.add(String.format("%s_%s.properties", base, loc.getLanguage()));
+    	}
+    	list.add(path);
+    	return list;
+    }
+
 }

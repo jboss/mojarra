@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import com.sun.faces.config.WebConfiguration;
 import com.sun.faces.util.Util;
@@ -122,6 +123,38 @@ public class ClasspathResourceHelper extends ResourceHelper {
             in = getResourceAsStream(loader, path, ctx);
         }
         return in;
+    }
+    
+    private InputStream getResourceAsStream(ClassLoader loader, String path, FacesContext ctx) {
+    	InputStream in = null;
+      	List<String> localizedPaths = getLocalizedProperties(path, ctx);
+      	for (String path_: localizedPaths) {
+      		in = getResourceAsStream(loader, path_);
+      		if (in != null) {
+      			break;
+      		}
+      	}
+      	return in;
+    }
+    
+    private URL getResourceURL(ClassLoader loader, String path, FacesContext ctx) {
+    	List<String> localizedPaths = getLocalizedProperties(path, ctx);
+    	URL url = null;
+    	for (String path_: localizedPaths) {
+    		url = getResource_(loader, path_);
+    		if (url != null) {
+    			break;
+    		}
+    	}
+    	return url;
+    }
+    
+    private InputStream getResourceAsStream(ClassLoader loader, String path) {
+    	InputStream in = loader.getResourceAsStream(path);
+    	if (in == null) {
+    		in = getClass().getClassLoader().getResourceAsStream(path);
+    	}
+    	return in;
     }
 
     /**
