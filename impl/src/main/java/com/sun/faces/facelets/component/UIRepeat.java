@@ -79,6 +79,9 @@ public class UIRepeat extends UINamingContainer {
 
     private int index = -1;
 
+    private Integer originalBegin;
+    private Integer originalEnd;
+
     private Integer begin;
     private Integer end;
     private Integer step;
@@ -209,8 +212,15 @@ public class UIRepeat extends UINamingContainer {
         if (model == null) {
             Object val = getValue();
             if (val == null) {
-                Integer begin = getBegin();
-                Integer end = getEnd();
+                if (originalBegin == null) {
+                    originalBegin = getBegin();
+                }
+                if (originalEnd == null) {
+                    originalEnd = getEnd();
+                }
+
+                Integer begin = originalBegin;
+                Integer end = originalEnd;
 
                 if (end == null) {
                     if (begin == null) {
@@ -981,14 +991,16 @@ public class UIRepeat extends UINamingContainer {
         }
         Object[] state = (Object[]) object;
         super.restoreState(faces, state[0]);
-        // noinspection unchecked
-        childState = (Map<String, SavedState>) state[1];
-        begin = (Integer) state[2];
-        end = (Integer) state[3];
-        step = (Integer) state[4];
-        var = (String) state[5];
-        varStatus = (String) state[6];
-        value = state[7];
+        //noinspection unchecked
+        this.childState = (Map<String,SavedState>) state[1];
+        this.begin = (Integer) state[2];
+        this.end = (Integer) state[3];
+        this.step = (Integer) state[4];
+        this.var = (String) state[5];
+        this.varStatus = (String) state[6];
+        this.value = state[7];
+        this.originalBegin = (Integer) state[8];
+        this.originalEnd = (Integer) state[9];
     }
 
     @Override
@@ -998,15 +1010,17 @@ public class UIRepeat extends UINamingContainer {
         if (faces == null) {
             throw new NullPointerException();
         }
-        Object[] state = new Object[8];
+        Object[] state = new Object[10];
         state[0] = super.saveState(faces);
-        state[1] = childState;
-        state[2] = begin;
-        state[3] = end;
-        state[4] = step;
-        state[5] = var;
-        state[6] = varStatus;
-        state[7] = value;
+        state[1] = this.childState;
+        state[2] = this.begin;
+        state[3] = this.end;
+        state[4] = this.step;
+        state[5] = this.var;
+        state[6] = this.varStatus;
+        state[7] = this.value;
+        state[8] = this.originalBegin;
+        state[9] = this.originalEnd;
         return state;
     }
 
