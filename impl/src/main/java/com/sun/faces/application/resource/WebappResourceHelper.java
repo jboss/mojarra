@@ -26,7 +26,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +37,10 @@ import jakarta.faces.FacesException;
 import jakarta.faces.application.ProjectStage;
 import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
+
+import com.sun.faces.config.WebConfiguration;
+import com.sun.faces.facelets.impl.DefaultResourceResolver;
+import com.sun.faces.util.FacesLogger;
 
 /**
  * <p>
@@ -295,26 +298,6 @@ public class WebappResourceHelper extends ResourceHelper {
         }
 
         return basePath;
-    }
-
-    private List<String> getLocalizedProperties(String path, FacesContext ctx) {
-    	Locale loc = (ctx != null && ctx.getViewRoot() != null) ? ctx.getViewRoot().getLocale() : null;
-    	if (!path.endsWith(".properties") || loc == null) {
-    		return Collections.singletonList(path);
-    	}
-    	List<String> list = new ArrayList<>();
-    	String base = path.substring(0, path.lastIndexOf(".properties"));
-    	if (!loc.getVariant().isEmpty()) {
-    		list.add(String.format("%s_%s_%s_%s.properties", base, loc.getLanguage(), loc.getCountry(), loc.getVariant()));
-    	}
-    	if (!loc.getCountry().isEmpty()) {
-    		list.add(String.format("%s_%s_%s.properties", base, loc.getLanguage(), loc.getCountry()));
-    	}
-    	if (!loc.getLanguage().isEmpty()) {
-    		list.add(String.format("%s_%s.properties", base, loc.getLanguage()));
-    	}
-    	list.add(path);
-    	return list;
     }
 
 }
