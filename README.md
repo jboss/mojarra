@@ -146,7 +146,7 @@ Optionally, register the `FacesServlet` in a Servlet 6.0+ compatible deployment 
 </web-app>
 ```
 
-Noted should be that Jakarta Faces 3.0+ is already "implicitly" registered and mapped on `*.xhtml`, `*.jsf`, `*.faces` and `/faces/*` when running on a Jakarta Servlet 5.0+ container. This will be overridden altogether when explicitly registering as above. [The `*.xhtml` URL pattern is preferred over above for security and clarity reasons][17]. When you don't explicitly map it on `*.xhtml`, then people can still access Faces pages using `*.jsf`, `*.faces` or `/faces/*` URL patterns. This is not nice for SEO as Faces by design doesn't 301-redirect them to a single mapping.
+Noted should be that Jakarta Faces is already "implicitly" registered and mapped on `*.xhtml`, `*.jsf`, `*.faces` and `/faces/*` when running on a Jakarta Servlet container. This will be overridden altogether when explicitly registering as above. [The `*.xhtml` URL pattern is preferred over above for security and clarity reasons][17]. When you don't explicitly map it on `*.xhtml`, then people can still access Faces pages using `*.jsf`, `*.faces` or `/faces/*` URL patterns. This is not nice for SEO as Faces by design doesn't 301-redirect them to a single mapping.
 
 The Faces deployment descriptor file `/WEB-INF/faces-config.xml` is fully optional.
 
