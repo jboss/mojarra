@@ -106,6 +106,10 @@ public class ELUtils {
     public static final FacesResourceBundleELResolver FACES_BUNDLE_RESOLVER = new FacesResourceBundleELResolver();
     public static final FlashELResolver FLASH_RESOLVER = new FlashELResolver();
     public static final ListELResolver LIST_RESOLVER = new ListELResolver();
+
+    public static final ManagedBeanELResolver MANAGED_BEAN_RESOLVER =
+        new ManagedBeanELResolver();
+
     public static final MapELResolver MAP_RESOLVER = new MapELResolver();
     public static final ResourceBundleELResolver BUNDLE_RESOLVER = new ResourceBundleELResolver();
     public static final ScopedAttributeELResolver SCOPED_RESOLVER = new ScopedAttributeELResolver();
@@ -165,6 +169,12 @@ public class ELUtils {
         composite.addPropertyELResolver(COMPOSITE_COMPONENT_ATTRIBUTES_EL_RESOLVER);
         addELResolvers(composite, associate.getELResolversFromFacesConfig());
         composite.add(associate.getApplicationELResolvers());
+
+        if (WebConfiguration.getInstance().isOptionEnabled(InterpretEmptyStringSubmittedValuesAsNull)) {
+            composite.addPropertyELResolver(EMPTY_STRING_TO_NULL_RESOLVER);
+        }
+
+        composite.addRootELResolver(MANAGED_BEAN_RESOLVER);
         composite.addPropertyELResolver(RESOURCE_RESOLVER);
         composite.addPropertyELResolver(BUNDLE_RESOLVER);
         composite.addRootELResolver(FACES_BUNDLE_RESOLVER);
