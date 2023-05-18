@@ -1289,7 +1289,7 @@ public class ELFlash extends Flash {
                 flashMap.clear();
                 // remove it from the flash
                 innerMap.remove(nextRequestFlashInfo.getSequenceNumber() + "");
-                expireNext();
+                nextRequestFlashInfo = null;
             }
 
             nextRequestFlashInfo = previousRequestFlashInfo;

@@ -30,7 +30,7 @@
 
     <groupId>com.sun.faces</groupId>
     <artifactId>jsf-project</artifactId>
-    <version>4.0.0.SP01</version>
+    <version>4.0.2.SP01</version>
     <packaging>pom</packaging>
 
     <name>JSF Parent</name>

@@ -38,10 +38,6 @@ import jakarta.faces.application.ProjectStage;
 import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
 
-import com.sun.faces.config.WebConfiguration;
-import com.sun.faces.facelets.impl.DefaultResourceResolver;
-import com.sun.faces.util.FacesLogger;
-
 /**
  * <p>
  * A {@link ResourceHelper} implementation for finding/serving resources found within
@@ -124,7 +120,7 @@ public class WebappResourceHelper extends ResourceHelper {
      */
     @Override
     protected InputStream getNonCompressedInputStream(ResourceInfo resource, FacesContext ctx) throws IOException {
-    	List<String> localizedPaths = getLocalizedPaths(resource.getPath(), ctx);
+       	List<String> localizedPaths = getLocalizedPaths(resource.getPath(), ctx);
     	InputStream in = null;
     	for (String path_: localizedPaths) {
     		in = ctx.getExternalContext().getResourceAsStream(path_);
@@ -299,5 +295,4 @@ public class WebappResourceHelper extends ResourceHelper {
 
         return basePath;
     }
-
 }

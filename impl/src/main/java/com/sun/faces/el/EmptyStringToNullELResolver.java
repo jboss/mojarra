@@ -19,8 +19,8 @@ package com.sun.faces.el;
 import java.beans.FeatureDescriptor;
 import java.util.Iterator;
 
-import javax.el.ELContext;
-import javax.el.ELResolver;
+import jakarta.el.ELContext;
+import jakarta.el.ELResolver;
 
 public class EmptyStringToNullELResolver extends ELResolver {
 
@@ -30,12 +30,13 @@ public class EmptyStringToNullELResolver extends ELResolver {
     }
 
     @Override
-    public Object convertToType(ELContext context, Object value, Class<?> targetType) {
+    @SuppressWarnings("unchecked")
+    public <T> T convertToType(ELContext context, Object value, Class<T> targetType) {
         if (value == null && targetType == String.class) {
             context.setPropertyResolved(true);
         }
 
-        return value;
+        return (T) value;
     }
 
     @Override

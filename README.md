@@ -315,7 +315,7 @@ Note that it's okay to send a PR to the master branch, but this one is for Faces
 pom.xml versions can be adjusted as follows
 
 ```
-mvn versions:set -DgroupId=* -DartifactId=* -DgenerateBackupPoms=false -DnewVersion=2.3.19-SNAPSHOT
+mvn versions:set -DgroupId=* -DartifactId=* -DoldVersion=* -DgenerateBackupPoms=false -DnewVersion=4.0.2.SP01
 ```
 
 ## Resources

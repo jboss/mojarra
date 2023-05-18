@@ -18,7 +18,6 @@ package jakarta.faces.component;
 
 import static com.sun.faces.util.Util.extractFirstNumericSegment;
 import static com.sun.faces.util.Util.isNestedInIterator;
-import static java.lang.Character.isDigit;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -942,57 +941,16 @@ public class UIData extends UIComponentBase implements NamingContainer, UniqueId
         // We need to find the first occurring client ID segment which is parseable as a number.
         if (clientId.startsWith(myId)) {
             try {
-                int preRowIndexSep, postRowIndexSep;
-
-                if (-1 != (preRowIndexSep =
-                      clientId.indexOf(sepChar,
-                                       myId.length()))) {
-                    // Check the length
-                    if (++preRowIndexSep < clientId.length()) {
-                        if (-1 != (postRowIndexSep =
-                              clientId.indexOf(sepChar,
-                                               preRowIndexSep + 1))) {
-                            try {
-                                newRow = Integer
-                                        .parseInt(clientId.substring(preRowIndexSep,
-                                                postRowIndexSep));
-                            } catch (NumberFormatException ex) {
-                                // PENDING(edburns): I18N
-                                String message =
-                                      "Trying to extract rowIndex from clientId \'"
-                                      +
-                                      clientId
-                                      + "\' "
-                                      + ex.getMessage();
-                                throw new NumberFormatException(message);
-                            }
-                            this.setRowIndex(newRow);
-                            if (this.isRowAvailable()) {
-                                found = super.invokeOnComponent(context,
-                                                                clientId,
-                                                                callback);
-                            }
-                        }
-                    }
                 try {
                     newRow = extractFirstNumericSegment(clientId.substring(myId.length()), sepChar);
-                }
-                catch (NumberFormatException ex) {
+                } catch (NumberFormatException ex) {
                     // PENDING(edburns): I18N
-                    String message =
-                            "Trying to extract rowIndex from clientId \'"
-                                    +
-                                    clientId
-                                    + "\' "
-                                    + ex.getMessage();
+                    String message = "Trying to extract rowIndex from clientId \'" + clientId + "\' " + ex.getMessage();
                     throw new NumberFormatException(message);
                 }
-                this.setRowIndex(newRow);
-                if (this.isRowAvailable()) {
-                    found = super.invokeOnComponent(context,
-                            clientId,
-                            callback);
->>>>>>> 9ca1bf1fa0 (https://github.com/eclipse-ee4j/mojarra/issues/5153):impl/src/main/java/javax/faces/component/UIData.java
+                setRowIndex(newRow);
+                if (isRowAvailable()) {
+                    found = super.invokeOnComponent(context, clientId, callback);
                 }
             } catch (FacesException fe) {
                 throw fe;
