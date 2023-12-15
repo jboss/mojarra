@@ -19,7 +19,6 @@ package com.sun.faces.lifecycle;
 import static com.sun.faces.renderkit.RenderKitUtils.PredefinedPostbackParameter.CLIENT_WINDOW_PARAM;
 
 import java.util.Map;
-
 import javax.faces.component.UINamingContainer;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -27,18 +26,18 @@ import javax.faces.lifecycle.ClientWindow;
 import javax.faces.render.ResponseStateManager;
 
 public class ClientWindowImpl extends ClientWindow {
-    
+
+    private final TokenGenerator tokenGenerator;
     String id;
 
-    public ClientWindowImpl() {
+    public ClientWindowImpl(TokenGenerator tokenGenerator) {
+        this.tokenGenerator = tokenGenerator;
     }
 
     @Override
     public Map<String, String> getQueryURLParameters(FacesContext context) {
         return null;
     }
-    
-    
 
     @Override
     public void decode(FacesContext context) {
@@ -55,9 +54,9 @@ public class ClientWindowImpl extends ClientWindow {
             id = calculateClientWindow(context);
         }
     }
-    
+
     private String calculateClientWindow(FacesContext context) {
-        synchronized(context.getExternalContext().getSession(true)) {
+        synchronized (context.getExternalContext().getSession(true)) {
             final String clientWindowCounterKey = "com.sun.faces.lifecycle.ClientWindowCounterKey";
             ExternalContext extContext = context.getExternalContext();
             Map<String, Object> sessionAttrs = extContext.getSessionMap();
@@ -66,10 +65,9 @@ public class ClientWindowImpl extends ClientWindow {
                 counter = Integer.valueOf(0);
             }
             char sep = UINamingContainer.getSeparatorChar(context);
-            id = extContext.getSessionId(true) + sep +
-                    + counter;
+            id = tokenGenerator.getNextToken() + sep + ++counter;
 
-            sessionAttrs.put(clientWindowCounterKey, ++counter);
+            sessionAttrs.put(clientWindowCounterKey, counter);
         }
         return id;
     }
