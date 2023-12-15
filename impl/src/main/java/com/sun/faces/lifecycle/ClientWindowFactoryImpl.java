@@ -29,9 +29,10 @@ import javax.faces.lifecycle.ClientWindowFactory;
 import com.sun.faces.config.WebConfiguration;
 
 public class ClientWindowFactoryImpl extends ClientWindowFactory {
-    
+
     private boolean isClientWindowEnabled = false;
     private WebConfiguration config = null;
+    private final TokenGenerator tokenGenerator = new TokenGenerator();
 
     public ClientWindowFactoryImpl() {
         super(null);
@@ -39,12 +40,22 @@ public class ClientWindowFactoryImpl extends ClientWindowFactory {
         context.getApplication().subscribeToEvent(PostConstructApplicationEvent.class,
                          Application.class, new PostConstructApplicationListener());
     }
-    
+
     public ClientWindowFactoryImpl(boolean ignored) {
         super(null);
         isClientWindowEnabled = false;
     }
-    
+
+
+    @Override
+    public ClientWindow getClientWindow(FacesContext context) {
+        if (!isClientWindowEnabled) {
+            return null;
+        }
+
+        return new ClientWindowImpl(tokenGenerator);
+    }
+
     private class PostConstructApplicationListener implements SystemEventListener {
 
         @Override
@@ -54,27 +65,17 @@ public class ClientWindowFactoryImpl extends ClientWindowFactory {
 
         @Override
         public void processEvent(SystemEvent event) throws AbortProcessingException {
-            ClientWindowFactoryImpl.this.postConstructApplicationInitialization();
+            postConstructApplicationInitialization();
         }
-        
+
     }
-    
+
     private void postConstructApplicationInitialization() {
         FacesContext context = FacesContext.getCurrentInstance();
         ExternalContext extContext = context.getExternalContext();
         config = WebConfiguration.getInstance(extContext);
         String optionValue = config.getOptionValue(WebConfiguration.WebContextInitParameter.ClientWindowMode);
-        
-        isClientWindowEnabled = (null != optionValue) && "url".equals(optionValue);
-    }
-    
-    
-    @Override
-    public ClientWindow getClientWindow(FacesContext context) {
-        if (!isClientWindowEnabled) {
-            return null;
-        }
-        
-        return new ClientWindowImpl();
+
+        isClientWindowEnabled = null != optionValue && "url".equals(optionValue);
     }
 }
