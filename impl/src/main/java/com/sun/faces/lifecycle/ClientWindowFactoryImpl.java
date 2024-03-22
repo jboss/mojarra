@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,8 @@
 
 package com.sun.faces.lifecycle;
 
+import com.sun.faces.config.WebConfiguration;
+
 import javax.faces.application.Application;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -26,34 +28,20 @@ import javax.faces.event.SystemEventListener;
 import javax.faces.lifecycle.ClientWindow;
 import javax.faces.lifecycle.ClientWindowFactory;
 
-import com.sun.faces.config.WebConfiguration;
-
 public class ClientWindowFactoryImpl extends ClientWindowFactory {
 
     private boolean isClientWindowEnabled = false;
     private WebConfiguration config = null;
-    private final TokenGenerator tokenGenerator = new TokenGenerator();
 
     public ClientWindowFactoryImpl() {
         super(null);
         FacesContext context = FacesContext.getCurrentInstance();
-        context.getApplication().subscribeToEvent(PostConstructApplicationEvent.class,
-                         Application.class, new PostConstructApplicationListener());
+        context.getApplication().subscribeToEvent(PostConstructApplicationEvent.class, Application.class, new PostConstructApplicationListener());
     }
 
     public ClientWindowFactoryImpl(boolean ignored) {
         super(null);
         isClientWindowEnabled = false;
-    }
-
-
-    @Override
-    public ClientWindow getClientWindow(FacesContext context) {
-        if (!isClientWindowEnabled) {
-            return null;
-        }
-
-        return new ClientWindowImpl(tokenGenerator);
     }
 
     private class PostConstructApplicationListener implements SystemEventListener {
@@ -77,5 +65,14 @@ public class ClientWindowFactoryImpl extends ClientWindowFactory {
         String optionValue = config.getOptionValue(WebConfiguration.WebContextInitParameter.ClientWindowMode);
 
         isClientWindowEnabled = null != optionValue && "url".equals(optionValue);
+    }
+
+    @Override
+    public ClientWindow getClientWindow(FacesContext context) {
+        if (!isClientWindowEnabled) {
+            return null;
+        }
+
+        return new ClientWindowImpl();
     }
 }

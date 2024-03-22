@@ -16,6 +16,8 @@
 
 package com.sun.faces.context;
 
+import static java.util.Optional.ofNullable;
+
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Iterator;
@@ -214,6 +216,25 @@ public class SessionMap extends BaseContextMap<Object> {
 
     protected HttpSession getSession(boolean createNew) {
         return request.getSession(createNew);
+    }
+
+    // ----------------------------------------------------------- Session Mutex
+    private static final String MUTEX = Mutex.class.getName();
+                                                                                                                                                            
+    private static final class Mutex implements Serializable {
+        private static final long serialVersionUID = 1L;
+    }
+
+    public static void createMutex(HttpSession session) {
+        session.setAttribute(MUTEX, new Mutex());
+    }
+
+    public static Object getMutex(Object session) {
+        return session instanceof HttpSession ? ofNullable(((HttpSession) session).getAttribute(MUTEX)).orElse(session) : session;
+    }
+
+    public static void removeMutex(HttpSession session) {
+        session.removeAttribute(MUTEX);
     }
 
 } // END SessionMap
