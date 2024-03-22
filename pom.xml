@@ -28,7 +28,7 @@
 
     <groupId>com.sun.faces</groupId>
     <artifactId>jsf-project</artifactId>
-    <version>2.3.14.SP09</version>
+    <version>2.3.14.SP10-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>JSF Parent</name>
