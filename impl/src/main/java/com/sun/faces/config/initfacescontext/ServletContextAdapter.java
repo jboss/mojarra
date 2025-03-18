@@ -258,6 +258,10 @@ public class ServletContextAdapter extends ExternalContext {
     }
 
     @Override
+    public void setResponseStatus(int statusCode) {
+    }
+
+    @Override
     public Object getSession(boolean create) {
         return null;
     }
