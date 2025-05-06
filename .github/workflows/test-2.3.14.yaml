@@ -1,0 +1,50 @@
+name: Build and Test Mojarra 2.3.14.SP
+        
+on:     
+  workflow_dispatch:
+    branches:
+      - 2.3.14.SP
+  push:
+    branches:
+      - 2.3.14.SP
+  pull_request:
+    branches:
+      - 2.3.14.SP
+          
+jobs:   
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java-version: [ 8, 17, 21 ]
+
+    steps:
+    - uses: actions/checkout@v3
+      
+    - name: Set up JDK ${{ matrix.java-version }}
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: ${{ matrix.java-version }}
+        cache: 'maven'
+
+    - name: Restore cached Maven packages
+      id: cache-maven-packages
+      uses: actions/cache/restore@v3
+      with:
+        path: |
+          ~/.m2
+          ~/.local/share/containers
+        key: ${{ runner.os }}-m2-${{ matrix.java-version }}-${{ hashFiles('**/pom.xml') }}
+
+    - name: Clean and build
+      run: mvn -B -fae clean package -Dgithub=true
+
+    - name: Cache Maven packages
+      uses: actions/cache/save@v3
+      with:
+        path: |
+          ~/.m2
+          ~/.local/share/containers
+        key: ${{ runner.os }}-m2-${{ matrix.java-version }}-${{ hashFiles('**/pom.xml') }}

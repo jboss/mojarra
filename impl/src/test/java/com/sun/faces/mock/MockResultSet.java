@@ -139,9 +139,11 @@ public class MockResultSet implements ResultSet {
             if (columnName.equals("writeOnlyProperty")
                     && (beans[row - 1] instanceof BeanTestImpl)) {
                 return (((BeanTestImpl) beans[row - 1]).getWriteOnlyPropertyValue());
-            } else {
+            } else if (!columnName.equals("class")) {
                 return (PropertyUtils.getSimpleProperty(beans[row - 1],
                         columnName));
+            } else {
+                return null;
             }
         } catch (Exception e) {
             throw new SQLException(e.getMessage());
